@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Text workbench · Bench</title>
+<meta name="description" content="Convert case, sort and dedupe lines, slugify, base64, URL-encode, find/replace with regex, and count words, bytes and reading time. Runs entirely in your browser.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0b0e12">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2f4f4">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Text workbench · Bench">
+<meta property="og:description" content="Convert case, sort and dedupe lines, slugify, base64, URL-encode, find/replace with regex, and count words, bytes and reading time. Runs entirely in your browser.">
+<meta property="og:image" content="../../assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="icon" href="../../assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/icon-180.png">
+<link rel="stylesheet" href="../../styles.css">
+<script>
+  try {
+    var t = localStorage.getItem("bench.theme.v1");
+    if (t) document.documentElement.dataset.theme = JSON.parse(t);
+    else if (matchMedia("(prefers-color-scheme: light)").matches) document.documentElement.dataset.theme = "light";
+  } catch (e) {}
+</script>
+</head>
+<body data-tool="text" data-base="../../">
+<main class="tool">
+  <header class="tool-head">
+    <p class="kicker">tool · text</p>
+    <h1>Text<br>workbench.</h1>
+    <p class="lede">Case conversion, line surgery, encoding and counting — all in the page. Paste a log, a list, a CSV column; get it back shaped. Nothing is uploaded, and your text is only remembered in this browser so a refresh does not lose it.</p>
+  </header>
+
+  <div class="toolbar">
+    <div class="tgroup">
+      <span class="label">Case</span>
+      <div class="tgroup-row" id="caseRow"><button class="tbtn" type="button" data-case="upper">UPPER</button><button class="tbtn" type="button" data-case="lower">lower</button><button class="tbtn" type="button" data-case="title">Title Case</button><button class="tbtn" type="button" data-case="sentence">Sentence case</button><button class="tbtn" type="button" data-case="kebab">kebab-case</button><button class="tbtn" type="button" data-case="snake">snake_case</button><button class="tbtn" type="button" data-case="constant">CONSTANT_CASE</button><button class="tbtn" type="button" data-case="camel">camelCase</button><button class="tbtn" type="button" data-case="pascal">PascalCase</button><button class="tbtn" type="button" data-case="invert">iNVERSE</button><button class="tbtn" type="button" data-case="smallcaps">sᴍᴀʟʟ ᴄᴀᴘs</button><button class="tbtn" type="button" data-case="fullwidth">ＦＵＬＬＷＩＤＴＨ</button></div>
+    </div>
+    <div class="tgroup">
+      <span class="label">Lines</span>
+      <div class="tgroup-row" id="lineRow"><button class="tbtn" type="button" data-op="sort">sort lines</button><button class="tbtn" type="button" data-op="sortLength">by length</button><button class="tbtn" type="button" data-op="reverse">reverse</button><button class="tbtn" type="button" data-op="dedupe">remove duplicates</button><button class="tbtn" type="button" data-op="dupesOnly">duplicates only</button><button class="tbtn" type="button" data-op="uniqOnly">unique only</button><button class="tbtn" type="button" data-op="dropEmpty">drop empty lines</button><button class="tbtn" type="button" data-op="number">number lines</button><button class="tbtn" type="button" data-op="stripNumbers">strip numbering</button><button class="tbtn" type="button" data-op="indent">indent</button><button class="tbtn" type="button" data-op="outdent">outdent</button><button class="tbtn" type="button" data-op="stripAllSpace">collapse spaces</button><button class="tbtn" type="button" data-op="wrap">wrap at width</button><button class="tbtn" type="button" data-op="joinSpaces">join to one line</button><button class="tbtn" type="button" data-op="asArray">as JS array</button><button class="tbtn" type="button" data-op="asSqlList">as SQL list</button><button class="tbtn" type="button" data-op="quoteCsv">quote line as one field</button></div>
+      <div class="inline-fields" style="margin-top:9px">
+        <label class="check"><input type="checkbox" id="optCi"><span>ignore case</span></label>
+        <label class="check"><input type="checkbox" id="optDesc"><span>descending</span></label>
+        <label class="check"><input type="checkbox" id="optUrlSafe"><span>URL-safe base64</span></label>
+      </div>
+      <div class="inline-fields" style="margin-top:6px">
+        <label class="field"><span>wrap width</span><input type="number" id="wrapWidth" value="80" min="10" max="400"></label>
+        <button class="tbtn" type="button" id="wrapBtn">wrap</button>
+        <label class="field"><span>start at</span><input type="number" id="numStart" value="1" min="0"></label>
+        <label class="field"><span>step</span><input type="number" id="numStep" value="1" min="1"></label>
+        <button class="tbtn" type="button" id="numBtn">number</button>
+      </div>
+      <div class="inline-fields" style="margin-top:6px">
+        <label class="field"><span>prefix</span><input type="text" id="prefix" placeholder="&bull; "></label>
+        <label class="field"><span>suffix</span><input type="text" id="suffix" placeholder=","</label>
+        <button class="tbtn" type="button" id="psBtn">wrap each line</button>
+      </div>
+    </div>
+    <div class="tgroup">
+      <span class="label">Transform</span>
+      <div class="tgroup-row">
+        <button class="tbtn" type="button" id="slug">slugify</button>
+        <button class="tbtn" type="button" id="stripTags">strip HTML</button>
+        <button class="tbtn" type="button" id="escapeHtml">escape &amp;&lt;&gt;</button>
+        <button class="tbtn" type="button" id="decodeHtml">decode entities</button>
+        <button class="tbtn" type="button" id="b64">base64 →</button>
+        <button class="tbtn" type="button" id="unb64">← base64</button>
+        <button class="tbtn" type="button" id="urlEnc">URL encode</button>
+        <button class="tbtn" type="button" id="urlDec">URL decode</button>
+      </div>
+      <div class="inline-fields" style="margin-top:9px">
+        <label class="field"><span>find (regex)</span><input type="text" id="find" spellcheck="false" placeholder="\d+"></label>
+        <label class="field"><span>flags</span><input type="text" id="flags" value="gi" spellcheck="false"></label>
+        <label class="field"><span>replace with</span><input type="text" id="repl" spellcheck="false" placeholder="$1"></label>
+        <span class="mini" id="rrCount"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cols">
+    <section class="panel editor">
+      <div class="panel-head">
+        <span class="label">input</span>
+        <div class="tgroup-row">
+          <button class="tbtn" type="button" id="pasteIn">paste</button>
+          <button class="tbtn" type="button" id="swap">swap</button>
+          <button class="tbtn" type="button" id="clearAll">clear</button>
+        </div>
+      </div>
+      <textarea class="codearea" id="src" spellcheck="false" aria-label="Input text" placeholder="Paste or type…"></textarea>
+      <div class="statgrid" aria-live="polite">
+        <div class="statbox"><span class="stat-label">characters</span><b data-stat="chars">0</b></div>
+        <div class="statbox"><span class="stat-label">no spaces</span><b data-stat="charsNoSpaces">0</b></div>
+        <div class="statbox"><span class="stat-label">words</span><b data-stat="words">0</b></div>
+        <div class="statbox"><span class="stat-label">unique words</span><b data-stat="uniqWords">0</b></div>
+        <div class="statbox"><span class="stat-label">lines</span><b data-stat="lines">0</b></div>
+        <div class="statbox"><span class="stat-label">paragraphs</span><b data-stat="paragraphs">0</b></div>
+        <div class="statbox"><span class="stat-label">sentences</span><b data-stat="sentences">0</b></div>
+        <div class="statbox"><span class="stat-label">utf-8 bytes</span><b data-stat="bytes">0</b></div>
+        <div class="statbox"><span class="stat-label">non-ascii</span><b data-stat="nonLatin">0</b></div>
+        <div class="statbox"><span class="stat-label">longest line</span><b data-stat="longestLine">0</b></div>
+        <div class="statbox"><span class="stat-label">avg word len</span><b data-stat="avgWordLen">0</b></div>
+        <div class="statbox"><span class="stat-label">read (min)</span><b data-stat="readingMin">0</b></div>
+      </div>
+    </section>
+    <section class="panel output">
+      <div class="panel-head">
+        <span class="label">result <span class="mini" data-count-out></span></span>
+        <div class="tgroup-row">
+          <button class="tbtn" type="button" id="useOut">use as input</button>
+          <button class="tbtn" type="button" id="copyOut">copy</button>
+          <button class="tbtn" type="button" id="downloadOut">download</button>
+        </div>
+      </div>
+      <pre class="out" id="out" aria-live="polite"></pre>
+    </section>
+  </div>
+
+  <p class="note">Every transform is a pure function on the page — <code>lineOp()</code>, <code>convertCase()</code>, <code>stats()</code> — and they are the same ones the test-suite runs in Node. That is why “remove duplicates” agrees with “unique only” on the same input.</p>
+
+</main>
+<script type="module" src="../../js/tools/text.js"></script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shadow &amp; glass · Bench</title>
+<meta name="description" content="Compose layered box-shadows, text-shadows, drop-filters and frosted glass with real per-layer controls, an elevation slider and an ink-weight verdict. Paste your own CSS to edit it. Nothing leaves the page.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0b0e12">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2f4f4">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Shadow &amp; glass · Bench">
+<meta property="og:description" content="Layered shadows and frosted glass, with an ink-weight verdict and a two-state hover block.">
+<meta property="og:image" content="../../assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="icon" href="../../assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/icon-180.png">
+<link rel="stylesheet" href="../../styles.css">
+<script>
+  try {
+    var t = localStorage.getItem("bench.theme.v1");
+    if (t) document.documentElement.dataset.theme = JSON.parse(t);
+    else if (matchMedia("(prefers-color-scheme: light)").matches) document.documentElement.dataset.theme = "light";
+  } catch (e) {}
+</script>
+</head>
+<body data-tool="shadow" data-base="../../">
+<main class="tool">
+  <header class="tool-head">
+    <p class="kicker">tool · shadow</p>
+    <h1>Depth, in<br>layers.</h1>
+    <p class="lede">One blurred black rectangle looks like dirt, so this treats a shadow the way CSS does: a stack. Tune each layer, drag elevation from 0 to 24, paste a value you already ship and edit it — then read the composed <code>box-shadow</code>, <code>text-shadow</code>, <code>drop-filter</code> and glass recipe.</p>
+  </header>
+
+  <div class="toolbar">
+    <div class="tgroup">
+      <span class="label">Starting points</span>
+      <div class="tgroup-row" id="presets">
+        <button class="tbtn is-on" type="button" data-preset="Soft lift">soft lift</button>
+        <button class="tbtn" type="button" data-preset="Brutal">brutal</button>
+        <button class="tbtn" type="button" data-preset="Carved in">carved</button>
+        <button class="tbtn" type="button" data-preset="Neon">neon</button>
+        <button class="tbtn" type="button" data-preset="Long">long</button>
+        <button class="tbtn" type="button" data-preset="Dirty">the bad one</button>
+      </div>
+      <span class="label" style="margin-top:12px;display:block">Elevation <span class="mono" id="elevRead"></span></span>
+      <div class="inline-fields">
+        <label class="field"><span>dp 0–24</span><input type="range" id="elevRow" min="0" max="24" step="1" value="6"></label>
+        <label class="field"><span>ink</span><input type="range" id="elevStrength" min="20" max="160" step="5" value="100"></label>
+        <label class="field"><span>tint</span><input type="color" id="elevColor" value="#000000" style="height:34px;padding:2px"></label>
+      </div>
+    </div>
+
+    <div class="tgroup">
+      <span class="label">Frosted glass</span>
+      <div class="flagboxes">
+        <label><input type="checkbox" id="glassToggle"><span>apply to the demo card</span></label>
+      </div>
+      <div class="inline-fields" style="margin-top:8px">
+        <label class="field"><span>blur</span><input type="range" id="gBlur" min="0" max="40" value="14"></label>
+        <label class="field"><span>alpha</span><input type="range" id="gAlpha" min="0" max="60" value="14"></label>
+        <label class="field"><span>saturate</span><input type="range" id="gSat" min="100" max="220" value="120"></label>
+        <label class="field"><span>edge</span><input type="range" id="gBorder" min="0" max="60" value="22"></label>
+        <label class="field"><span>radius</span><input type="range" id="gRadius" min="0" max="40" value="16"></label>
+        <label class="field"><span>tint</span><input type="color" id="gTint" value="#ffffff" style="height:34px;padding:2px"></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="cols" style="margin-top:14px">
+    <section class="panel">
+      <span class="label">Layers</span>
+      <div class="layers" id="layers"></div>
+      <div class="tgroup-row" style="margin-top:10px">
+        <button class="tbtn" type="button" id="addLayer">+ layer</button>
+        <button class="tbtn" type="button" id="flatten">drop muted layers</button>
+      </div>
+      <p class="mini" style="margin-top:8px">Order matters: the first layer is painted on top. Toggling <b>inset</b> moves a layer inside the box, which is how you fake a carved edge.</p>
+    </section>
+
+    <section class="panel">
+      <span class="label">Preview</span>
+      <div id="shadowPreview" class="preview-stage checkerboard">
+        <div id="demoCard" class="demo-card">
+          <b>Card title</b>
+          <span class="mini">Body copy sitting on the surface, over a checkerboard so a semi-transparent shadow cannot hide.</span>
+          <svg id="demoSvg" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" style="color:var(--accent)">
+            <path fill="currentColor" d="M12 2l2.9 6.2 6.6.8-4.9 4.6 1.3 6.6L12 17l-5.9 3.8 1.3-6.6L2.5 9l6.6-.8z"></path>
+          </svg>
+        </div>
+        <p id="demoWord" class="demo-word">Shadow</p>
+      </div>
+      <div id="inkWeight" class="tgroup-row" style="margin-top:10px"></div>
+    </section>
+  </div>
+
+  <div class="cols" style="margin-top:14px">
+    <section class="panel">
+      <span class="label">Paste an existing value to edit it</span>
+      <textarea class="codearea" id="shadowIn" spellcheck="false" aria-label="Existing CSS shadow value" style="min-height:74px"></textarea>
+      <div class="tgroup-row" style="margin-top:8px">
+        <button class="tbtn" type="button" id="importShadow">read it into the layers</button>
+      </div>
+      <p class="mini">Handles <code>rgb(0 0 0 / .2)</code> and <code>rgba(0,0,0,.2)</code>, with or without the spread, and keeps <code>inset</code> where it finds it.</p>
+    </section>
+
+    <section class="panel">
+      <span class="label">Output</span>
+      <div class="inline-fields">
+        <label class="field"><span>token name</span><input type="text" id="sname" value="shadow" spellcheck="false"></label>
+        <label class="field"><span>format</span>
+          <select id="format">
+            <option value="css">CSS block</option>
+            <option value="raw">just the value</option>
+            <option value="scss">SCSS variable</option>
+            <option value="tailwind">Tailwind arbitrary value</option>
+            <option value="json">JSON layers</option>
+          </select>
+        </label>
+      </div>
+      <textarea class="codearea" id="shadowOut" spellcheck="false" readonly aria-label="Generated CSS" style="min-height:130px;margin-top:8px"></textarea>
+      <div class="tgroup-row" style="margin-top:8px">
+        <button class="tbtn" type="button" id="copyOut">copy</button>
+        <button class="tbtn" type="button" id="copyHover">copy rest + hover</button>
+      </div>
+    </section>
+  </div>
+</main>
+<script type="module" src="../../js/tools/shadow.js"></script>
+</body>
+</html>

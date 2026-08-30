@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Colour & contrast · Bench</title>
+<meta name="description" content="Convert hex, rgb and hsl, build an accessible ramp, check WCAG 2.2 contrast with AA/AAA verdicts, and export a palette as CSS, Tailwind, SCSS or JSON. Local only.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0b0e12">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2f4f4">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Colour & contrast · Bench">
+<meta property="og:description" content="Convert hex, rgb and hsl, build an accessible ramp, check WCAG 2.2 contrast with AA/AAA verdicts, and export a palette as CSS, Tailwind, SCSS or JSON. Local only.">
+<meta property="og:image" content="../../assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="icon" href="../../assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/icon-180.png">
+<link rel="stylesheet" href="../../styles.css">
+<script>
+  try {
+    var t = localStorage.getItem("bench.theme.v1");
+    if (t) document.documentElement.dataset.theme = JSON.parse(t);
+    else if (matchMedia("(prefers-color-scheme: light)").matches) document.documentElement.dataset.theme = "light";
+  } catch (e) {}
+</script>
+</head>
+<body data-tool="color" data-base="../../">
+<main class="tool">
+  <header class="tool-head">
+    <p class="kicker">tool · color</p>
+    <h1>Colour<br>& contrast.</h1>
+    <p class="lede">One hex in, everything out: formats, a 10-step ramp with a real contrast number on each stop, harmonic siblings, and WCAG 2.2 verdicts against any background — including a one-click fix that only moves lightness until it passes.</p>
+  </header>
+
+  <div class="toolbar">
+    <div class="tgroup">
+      <span class="label">Base colour</span>
+      <div class="inline-fields">
+        <label class="field"><span>hex / rgb() / hsl() / name</span><input type="text" id="hexIn" spellcheck="false" value="#2e6fdb"></label>
+        <label class="field"><span>picker</span><input type="color" id="pick" value="#2e6fdb" style="height:38px;padding:2px"></label>
+        <button class="tbtn" type="button" id="random">random</button>
+      </div>
+      <p class="mini" id="hexErr" hidden style="color:var(--err)"></p>
+    </div>
+    <div class="tgroup">
+      <span class="label">Contrast against</span>
+      <div class="inline-fields">
+        <label class="field"><span>background</span><input type="color" id="pickBg" value="#0f1017" style="height:38px;padding:2px"></label>
+        <button class="tbtn" type="button" id="swapBg">swap fg/bg</button>
+      </div>
+      <p class="mini">Ratio <b class="mono" id="ratio">—</b> of 21 · <span class="mono" id="fixContrast">—</span></p>
+      <div class="totals-bar" style="margin-top:6px"><i id="ratioBar"></i></div>
+      <div class="tgroup-row" id="verdicts" style="margin-top:8px"></div>
+    </div>
+    <div class="tgroup">
+      <span class="label">Export</span>
+      <div class="inline-fields">
+        <label class="field"><span>format</span>
+          <select id="exportKind"><option value="css">CSS custom props</option><option value="tailwind">Tailwind</option><option value="scss">SCSS</option><option value="json">JSON</option><option value="js">ES module</option><option value="svg">SVG swatches</option></select>
+        </label>
+        <button class="tbtn" type="button" id="copyExport">copy <span class="mini" id="exportBytes"></span></button>
+      </div>
+      <textarea class="codearea" id="exports" style="min-height:120px" spellcheck="false" aria-label="Exported palette"></textarea>
+    </div>
+  </div>
+
+  <div class="cols cols-3" style="margin-top:14px">
+    <section class="panel" style="padding:0;overflow:hidden">
+      <div id="swatch" class="swatch-lg" aria-label="Current colour"></div>
+      <div style="padding:12px" id="formats"></div>
+    </section>
+    <section class="panel">
+      <span class="label">Live sample</span>
+      <div id="sample" class="sample"></div>
+      <span class="label" style="margin-top:12px;display:block">Harmonies</span>
+      <div id="harmonies"></div>
+    </section>
+    <section class="panel">
+      <span class="label">Ramp (click to copy)</span>
+      <div id="ramp" class="ramp"></div>
+      <p class="mini">Each stop shows its contrast ratio on white. A ramp where the mid-stops are unreadable is a ramp you cannot ship.</p>
+    </section>
+  </div>
+
+</main>
+<script type="module" src="../../js/tools/color.js"></script>
+</body>
+</html>

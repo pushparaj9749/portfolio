@@ -1,0 +1,48 @@
+{
+  "name": "Bench — eight private browser tools",
+  "short_name": "Bench",
+  "description": "Images, text, JSON, colour, hashes, regex, CSV and dates — everyday tools that run entirely in your tab. No account, no upload, no server, works offline once loaded.",
+  "start_url": "./",
+  "scope": "./",
+  "id": "bench",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0b0e12",
+  "theme_color": "#0b0e12",
+  "categories": ["utilities", "productivity", "developer tools"],
+  "icons": [
+    { "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" },
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshot": [
+    { "src": "assets/og.png", "sizes": "1200x630", "type": "image/png", "label": "Bench — eight tools, zero uploads" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Image workbench",
+      "short_name": "Images",
+      "description": "Batch compress, resize, convert, strip EXIF",
+      "url": "images/?recipe=compress"
+    },
+    {
+      "name": "JSON formatter",
+      "short_name": "JSON",
+      "description": "Format, validate and flatten JSON",
+      "url": "tools/json/"
+    },
+    {
+      "name": "Hash & code",
+      "short_name": "Hash",
+      "description": "Digests, JWT, UUID, password maths",
+      "url": "tools/hash/"
+    },
+    {
+      "name": "Colour & contrast",
+      "short_name": "Colour",
+      "description": "Palettes, conversions, WCAG contrast",
+      "url": "tools/color/"
+    }
+  ]
+}

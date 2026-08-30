@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Regex tester & explainer · Bench</title>
+<meta name="description" content="JavaScript regex tester with live highlighting, capture and named groups, offsets, a replacement preview and a token-by-token explainer. Patterns never leave the page.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0b0e12">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2f4f4">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Regex tester & explainer · Bench">
+<meta property="og:description" content="JavaScript regex tester with live highlighting, capture and named groups, offsets, a replacement preview and a token-by-token explainer. Patterns never leave the page.">
+<meta property="og:image" content="../../assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="icon" href="../../assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/icon-180.png">
+<link rel="stylesheet" href="../../styles.css">
+<script>
+  try {
+    var t = localStorage.getItem("bench.theme.v1");
+    if (t) document.documentElement.dataset.theme = JSON.parse(t);
+    else if (matchMedia("(prefers-color-scheme: light)").matches) document.documentElement.dataset.theme = "light";
+  } catch (e) {}
+</script>
+</head>
+<body data-tool="regex" data-base="../../">
+<main class="tool">
+  <header class="tool-head">
+    <p class="kicker">tool · regex</p>
+    <h1>Regex<br>workbench.</h1>
+    <p class="lede">Type a pattern and watch it match. Capture groups, named groups, byte offsets, a live replacement preview, and a token-by-token explainer — so a pattern you found at 2 AM can be read, not just pasted.</p>
+  </header>
+
+  <section class="panel">
+    <div class="inline-fields">
+      <label class="field" style="flex:4 1 320px"><span>pattern</span><input type="text" id="pattern" spellcheck="false" autocomplete="off" autocapitalize="off"></label>
+      <label class="field" style="flex:0 0 90px"><span>flags</span><input type="text" id="flags" spellcheck="false" autocomplete="off"></label>
+      <label class="field" style="flex:2 1 200px"><span>replacement (use <code>$1</code>, <code>$&lt;name&gt;</code>)</span><input type="text" id="repl" spellcheck="false" autocomplete="off"></label>
+    </div>
+    <div class="inline-fields" style="margin-top:4px">
+      <span class="mini" id="mcount"></span>
+      <span class="mini" id="replCount"></span>
+    </div>
+    <div id="flagBoxes" class="flagboxes"></div>
+  </section>
+
+  <div class="cols" style="margin-top:14px">
+    <section class="panel editor">
+      <div class="panel-head">
+        <span class="label">test string</span>
+        <div class="tgroup-row">
+          <button class="tbtn" type="button" id="useSelection">use selection</button>
+          <button class="tbtn" type="button" id="escapeSel">escape pattern</button>
+        </div>
+      </div>
+      <textarea class="codearea" id="input" spellcheck="false" aria-label="Test subject"></textarea>
+      <span class="label">highlights</span>
+      <pre class="out hl" id="highlight" aria-live="polite"></pre>
+    </section>
+    <section class="panel output">
+      <div class="panel-head"><span class="label">result of replacement</span>
+        <div class="tgroup-row">
+          <button class="tbtn" type="button" id="copyRepl">copy</button>
+          <button class="tbtn" type="button" id="applyRepl">apply to input</button>
+        </div>
+      </div>
+      <pre class="out" id="replOut"></pre>
+      <div class="panel-head" style="margin-top:10px"><span class="label">matches</span>
+        <button class="tbtn" type="button" id="copyMatches">copy matched text</button>
+      </div>
+      <div class="tablewrap"><table class="dt" id="matchList"></table></div>
+    </section>
+  </div>
+
+  <div class="cols" style="margin-top:14px">
+    <section class="panel">
+      <div class="panel-head"><span class="label">explainer — read it back to you</span></div>
+      <div class="tablewrap" style="max-height:300px"><table class="dt" id="explain"></table></div>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><span class="label">library — click to load</span></div>
+      <div id="snippets" class="snips"></div>
+    </section>
+  </div>
+
+</main>
+<script type="module" src="../../js/tools/regex.js"></script>
+</body>
+</html>

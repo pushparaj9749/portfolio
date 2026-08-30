@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Type &amp; space scale · Bench</title>
+<meta name="description" content="A modular type scale, a spacing scale, and a fluid clamp() that is solved for its endpoints and then re-checked — plus a vertical-rhythm audit and Tailwind, SCSS, CSS or JSON export. Local only.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0b0e12">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2f4f4">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Type &amp; space scale · Bench">
+<meta property="og:description" content="Modular scales, fluid clamp() solved and verified, spacing steps, rhythm audit, token export.">
+<meta property="og:image" content="../../assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="icon" href="../../assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/icon-180.png">
+<link rel="stylesheet" href="../../styles.css">
+<script>
+  try {
+    var t = localStorage.getItem("bench.theme.v1");
+    if (t) document.documentElement.dataset.theme = JSON.parse(t);
+    else if (matchMedia("(prefers-color-scheme: light)").matches) document.documentElement.dataset.theme = "light";
+  } catch (e) {}
+</script>
+</head>
+<body data-tool="scale" data-base="../../">
+<main class="tool">
+  <header class="tool-head">
+    <p class="kicker">tool · scale</p>
+    <h1>Type &amp;<br>space, in ratio.</h1>
+    <p class="lede">A scale is a power and a fluid size is a line, so both are computed exactly — and the <code>clamp()</code> you get back is re-evaluated at both viewports to prove it reaches the sizes you asked for. Leading, line length and vertical rhythm are measured against this panel's real width, not guessed.</p>
+    <p class="mini" id="rootNote"></p>
+  </header>
+
+  <div class="toolbar">
+    <div class="tgroup">
+      <span class="label">Body size &amp; ratio</span>
+      <div class="inline-fields">
+        <label class="field"><span>base px</span><input type="number" id="base" min="10" max="32" step="0.5" value="18" inputmode="decimal"></label>
+        <label class="field"><span>ratio</span><input type="number" id="ratioNum" min="1.01" max="2" step="0.001" value="1.25" inputmode="decimal"></label>
+      </div>
+      <div class="tgroup-row" id="ratios" style="margin-top:8px">
+        <button class="tbtn" type="button" data-ratio="1.067">min 2nd</button>
+        <button class="tbtn" type="button" data-ratio="1.125">maj 2nd</button>
+        <button class="tbtn is-on" type="button" data-ratio="1.25">maj 3rd</button>
+        <button class="tbtn" type="button" data-ratio="1.333">perf 4th</button>
+        <button class="tbtn" type="button" data-ratio="1.414">aug 4th</button>
+        <button class="tbtn" type="button" data-ratio="1.618">golden</button>
+      </div>
+      <div class="inline-fields" style="margin-top:8px">
+        <label class="field"><span>steps up</span><input type="range" id="spread" min="2" max="9" step="1" value="6"></label>
+        <label class="field"><span><input type="checkbox" id="snapRow"> snap sizes to 4px</span></label>
+      </div>
+    </div>
+
+    <div class="tgroup">
+      <span class="label">Fluid size (clamp)</span>
+      <div class="inline-fields">
+        <label class="field"><span>min px</span><input type="number" id="fMin" min="8" max="120" step="0.5" value="16" inputmode="decimal"></label>
+        <label class="field"><span>max px</span><input type="number" id="fMax" min="8" max="160" step="0.5" value="28" inputmode="decimal"></label>
+        <label class="field"><span>from vw</span><input type="number" id="fMinVw" min="240" max="2000" step="10" value="360" inputmode="numeric"></label>
+        <label class="field"><span>to vw</span><input type="number" id="fMaxVw" min="320" max="3000" step="10" value="1200" inputmode="numeric"></label>
+      </div>
+      <div class="tgroup-row" style="margin-top:8px">
+        <button class="tbtn" type="button" id="swapFluid">swap ends</button>
+        <button class="tbtn" type="button" id="copyFluid">copy clamp()</button>
+      </div>
+      <div id="fluidChecks" class="tgroup-row" style="margin-top:8px"></div>
+      <textarea class="codearea" id="fluidOut" readonly spellcheck="false" aria-label="Fluid CSS" style="min-height:64px;margin-top:8px"></textarea>
+      <div id="fluidBars" class="fluid-bars"></div>
+    </div>
+
+    <div class="tgroup">
+      <span class="label">Spacing scale</span>
+      <div class="inline-fields">
+        <label class="field"><span>unit px</span><input type="number" id="spUnit" min="2" max="16" step="1" value="8" inputmode="numeric"></label>
+        <label class="field"><span>steps</span><input type="number" id="spSteps" min="3" max="14" step="1" value="8" inputmode="numeric"></label>
+      </div>
+      <div class="tgroup-row" id="spaceModes" style="margin-top:8px">
+        <button class="tbtn is-on" type="button" data-mode="multiply">multiply</button>
+        <button class="tbtn" type="button" data-mode="binary">binary</button>
+        <button class="tbtn" type="button" data-mode="fibonacci">fibonacci</button>
+      </div>
+      <div id="spaceStrip" class="space-strip" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+  <section class="panel" style="margin-top:14px">
+    <span class="label">Specimen — line length measured in this panel</span>
+    <div id="specimen" class="specimen"></div>
+    <div id="rhythm" class="tgroup-row" style="margin-top:10px"></div>
+  </section>
+
+  <section class="panel" style="margin-top:14px">
+    <span class="label">Tokens</span>
+    <div class="inline-fields">
+      <label class="field"><span>prefix</span><input type="text" id="tname" value="text" spellcheck="false"></label>
+      <label class="field"><span>format</span>
+        <select id="format">
+          <option value="css">CSS custom properties</option>
+          <option value="tailwind">Tailwind config</option>
+          <option value="scss">SCSS variables</option>
+          <option value="json">JSON</option>
+        </select>
+      </label>
+      <button class="tbtn" type="button" id="copyScale">copy</button>
+    </div>
+    <textarea class="codearea" id="scaleOut" readonly spellcheck="false" aria-label="Token export" style="min-height:150px;margin-top:8px"></textarea>
+    <p class="mini">Snap-to-4px is here because a scale that never lands on the grid makes you choose between type size and rhythm. The audit line says which sizes miss, and by how much.</p>
+  </section>
+</main>
+<script type="module" src="../../js/tools/scale.js"></script>
+</body>
+</html>

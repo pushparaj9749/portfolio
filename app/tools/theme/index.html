@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Theme builder · Bench</title>
+<meta name="description" content="Turn one brand colour into a full light and dark token set — surfaces, lines, text steps, accents — with WCAG contrast measured on every pair, a one-click lightness-only fix, and CSS, Tailwind, SCSS, JSON or Figma export. Local only.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0b0e12">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2f4f4">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Theme builder · Bench">
+<meta property="og:description" content="One colour in, a contrast-checked token set out — light and dark, with CSS, Tailwind, SCSS, JSON and Figma export.">
+<meta property="og:image" content="../../assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="icon" href="../../assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/icon-180.png">
+<link rel="stylesheet" href="../../styles.css">
+<script>
+  try {
+    var t = localStorage.getItem("bench.theme.v1");
+    if (t) document.documentElement.dataset.theme = JSON.parse(t);
+    else if (matchMedia("(prefers-color-scheme: light)").matches) document.documentElement.dataset.theme = "light";
+  } catch (e) {}
+</script>
+</head>
+<body data-tool="theme" data-base="../../">
+<main class="tool">
+  <header class="tool-head">
+    <p class="kicker">tool · theme</p>
+    <h1>One colour<br>in, a theme out.</h1>
+    <p class="lede">Surfaces, lines, three steps of text, an accent and its button label — derived in OKLCH so the ground stays as quiet as you set it, whatever hue you paste. Every pair a reader actually meets is measured against WCAG, and the fix moves <em>lightness only</em>: your brand's hue and chroma are never bargained with.</p>
+    <p class="mini" id="brandRead"></p>
+  </header>
+
+  <div class="toolbar">
+    <div class="tgroup">
+      <span class="label">Brand colour</span>
+      <div class="inline-fields">
+        <label class="field"><span>picker</span><input type="color" id="brand" value="#3fd9bf" style="height:38px;padding:2px"></label>
+        <label class="field"><span>or type it</span><input type="text" id="brandText" value="#3fd9bf" spellcheck="false" placeholder="#3fd9bf · rgb(63 217 191) · tomato"></label>
+        <button class="tbtn" type="button" id="brandRandom">random hue</button>
+      </div>
+      <p class="mini" id="brandErr" hidden style="color:var(--err)"></p>
+      <div class="tgroup-row" id="modes" style="margin-top:8px">
+        <button class="tbtn is-on" type="button" data-mode="dark" aria-pressed="true">dark</button>
+        <button class="tbtn is-on" type="button" data-mode="light" aria-pressed="true">light</button>
+      </div>
+    </div>
+
+    <div class="tgroup">
+      <span class="label">How the surfaces behave</span>
+      <label class="field"><span>hue bleed into surfaces <span class="mono" id="tintOut"></span></span><input type="range" id="tintRange" min="0" max="100" value="55"></label>
+      <label class="field" style="margin-top:8px"><span>accent chroma</span><input type="range" id="chromaRange" min="5" max="100" value="100"></label>
+      <label class="field" style="margin-top:8px"><span>secondary hue offset</span><input type="range" id="offsetRange" min="0" max="330" step="15" value="150"></label>
+      <p class="mini">Bleed at 0 gives you a neutral grey ground with a coloured accent — the safest thing to ship. Push it up when you want the tint to carry the brand instead.</p>
+    </div>
+
+    <div class="tgroup">
+      <span class="label">Import what you have</span>
+      <textarea class="codearea" id="importBox" spellcheck="false" aria-label="Existing CSS tokens" placeholder="--bg: #0b0e12;&#10;--accent: rgb(63 217 191);" style="min-height:74px"></textarea>
+      <div class="tgroup-row" style="margin-top:8px">
+        <button class="tbtn" type="button" id="importCss">read my tokens</button>
+      </div>
+      <p class="mini" id="importReport" hidden></p>
+    </div>
+  </div>
+
+  <div class="cols" style="margin-top:14px">
+    <section class="panel">
+      <span class="label">Dark, at 1:1 scale</span>
+      <div id="miniDark" class="minipage">
+        <div class="mp-head" style="background:var(--panel);color:var(--fg);border-color:var(--line)">
+          <span style="flex:1">Acme Console</span>
+          <button class="mp-btn" style="background:var(--accent);color:var(--on-accent)">Deploy</button>
+        </div>
+        <div class="mp-body" style="background:var(--bg);color:var(--fg)">
+          <p style="font-size:1.15rem;line-height:1.5;margin:0">Ship notes for the week — body copy sits on <code>--bg</code>, so this is the paragraph that has to be readable at 3 a.m.</p>
+          <div class="mp-card" style="background:var(--panel);border-color:var(--line)">
+            <b>Build #2417</b>
+            <p class="mini" style="color:var(--fg-2);margin:2px 0 6px">secondary text on <code>--panel</code></p>
+            <div class="mp-line" style="background:var(--line)"></div>
+            <div class="mp-line" style="background:var(--line-2);width:62%"></div>
+          </div>
+          <div class="tgroup-row" style="gap:6px">
+            <span class="pill" style="color:var(--ok);border-color:var(--ok)">passing</span>
+            <span class="pill" style="color:var(--warn);border-color:var(--warn)">flaky</span>
+            <span class="pill" style="color:var(--err);border-color:var(--err)">failing</span>
+            <a href="#hexRow" style="color:var(--accent)">a link</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <span class="label">Light, same brand</span>
+      <div id="miniLight" class="minipage">
+        <div class="mp-head" style="background:var(--panel);color:var(--fg);border-color:var(--line)">
+          <span style="flex:1">Acme Console</span>
+          <button class="mp-btn" style="background:var(--accent);color:var(--on-accent)">Deploy</button>
+        </div>
+        <div class="mp-body" style="background:var(--bg);color:var(--fg)">
+          <p style="font-size:1.15rem;line-height:1.5;margin:0">Ship notes for the week — body copy sits on <code>--bg</code>, so this is the paragraph that has to be readable at 3 a.m.</p>
+          <div class="mp-card" style="background:var(--panel);border-color:var(--line)">
+            <b>Build #2417</b>
+            <p class="mini" style="color:var(--fg-2);margin:2px 0 6px">secondary text on <code>--panel</code></p>
+            <div class="mp-line" style="background:var(--line)"></div>
+            <div class="mp-line" style="background:var(--line-2);width:62%"></div>
+          </div>
+          <div class="tgroup-row" style="gap:6px">
+            <span class="pill" style="color:var(--ok);border-color:var(--ok)">passing</span>
+            <span class="pill" style="color:var(--warn);border-color:var(--warn)">flaky</span>
+            <span class="pill" style="color:var(--err);border-color:var(--err)">failing</span>
+            <a href="#hexRow" style="color:var(--accent)">a link</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="cols" style="margin-top:14px">
+    <section class="panel">
+      <span class="label">Contrast audit — only the pairs a reader meets</span>
+      <div id="auditScore" class="tgroup-row" style="margin-bottom:6px"></div>
+      <div id="themeAudit"></div>
+      <div class="tgroup-row" style="margin-top:10px">
+        <button class="tbtn" type="button" id="fixAll">fix what failed (lightness only)</button>
+        <button class="tbtn" type="button" id="applyPage">try it on this page</button>
+      </div>
+      <p class="mini" id="fixLog" hidden style="margin-top:6px"></p>
+    </section>
+
+    <section class="panel">
+      <span class="label">Tokens (click to copy)</span>
+      <div id="hexRow" class="cols" style="gap:0 14px"></div>
+      <span class="label" style="margin-top:12px;display:block">Export</span>
+      <div class="inline-fields">
+        <label class="field"><span>scope name</span><input type="text" id="tname" value="theme" spellcheck="false"></label>
+        <label class="field"><span>format</span>
+          <select id="format">
+            <option value="css">CSS custom properties</option>
+            <option value="tailwind">Tailwind config</option>
+            <option value="scss">SCSS variables</option>
+            <option value="json">Design tokens JSON</option>
+            <option value="figma">Figma colour JSON</option>
+          </select>
+        </label>
+        <button class="tbtn" type="button" id="copyTheme">copy</button>
+      </div>
+      <textarea class="codearea" id="themeOut" readonly spellcheck="false" aria-label="Exported tokens" style="min-height:150px;margin-top:8px"></textarea>
+    </section>
+  </div>
+</main>
+<script type="module" src="../../js/tools/theme.js"></script>
+</body>
+</html>
