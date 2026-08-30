@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CSV, TSV, JSON & Markdown tables · Bench</title>
+<meta name="description" content="Parse and convert CSV/TSV with real RFC-4180 quoting, sniff the delimiter, flag ragged rows, profile every column, sort, filter, dedupe, transpose and export to JSON, Markdown, HTML or SQL.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0b0e12">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2f4f4">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CSV, TSV, JSON & Markdown tables · Bench">
+<meta property="og:description" content="Parse and convert CSV/TSV with real RFC-4180 quoting, sniff the delimiter, flag ragged rows, profile every column, sort, filter, dedupe, transpose and export to JSON, Markdown, HTML or SQL.">
+<meta property="og:image" content="../../assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="icon" href="../../assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/icon-180.png">
+<link rel="stylesheet" href="../../styles.css">
+<script>
+  try {
+    var t = localStorage.getItem("bench.theme.v1");
+    if (t) document.documentElement.dataset.theme = JSON.parse(t);
+    else if (matchMedia("(prefers-color-scheme: light)").matches) document.documentElement.dataset.theme = "light";
+  } catch (e) {}
+</script>
+</head>
+<body data-tool="csv" data-base="../../">
+<main class="tool">
+  <header class="tool-head">
+    <p class="kicker">tool · tables</p>
+    <h1>CSV<br>& tables.</h1>
+    <p class="lede">A parser that respects quoted fields, embedded newlines and doubled quotes — the three things naive CSV code gets wrong. Sniffs the delimiter, flags ragged rows, types each column, and moves between CSV, TSV, JSON, Markdown, HTML and SQL.</p>
+  </header>
+
+  <div class="toolbar" id="controls">
+    <div class="tgroup">
+      <span class="label">Parse</span>
+      <div class="inline-fields">
+        <label class="field"><span>delimiter</span>
+          <select id="delim"><option value="auto">auto-detect</option><option value=",">comma ,</option><option value=";">semicolon ;</option><option value="&#9;">tab</option><option value="|">pipe |</option></select>
+        </label>
+        <label class="check"><input type="checkbox" id="hasHeader" checked><span>first row is header</span></label>
+        <label class="check"><input type="checkbox" id="typed" checked><span>type cells</span></label>
+      </div>
+      <p class="mini">detected: <b class="mono" id="delimInfo">—</b></p>
+    </div>
+    <div class="tgroup">
+      <span class="label">Filter</span>
+      <div class="inline-fields">
+        <label class="field"><span>column</span><select id="filterCol"></select></label>
+        <label class="field"><span>op</span><select id="filterOp"><option value="~">contains</option><option value="=">=</option><option value="!=">!=</option><option value="!~">excludes</option><option value=">">&gt;</option><option value="<">&lt;</option><option value="empty">is empty</option><option value="!empty">is not empty</option><option value="regex">regex</option></select></label>
+        <label class="field"><span>value</span><input type="text" id="filterVal" spellcheck="false"></label>
+        <label class="check"><input type="checkbox" id="caseSen"><span>case</span></label>
+      </div>
+    </div>
+    <div class="tgroup">
+      <span class="label">Sort & shape</span>
+      <div class="inline-fields">
+        <label class="field"><span>column</span><select id="sortCol"></select></label>
+        <label class="field"><span>dir</span><select id="sortDir"><option value="">none</option><option value="asc">asc</option><option value="desc">desc</option></select></label>
+      </div>
+      <div class="tgroup-row" style="margin-top:8px">
+        <button class="tbtn" type="button" id="transpose">transpose</button>
+        <button class="tbtn" type="button" id="dedupe">dedupe rows</button>
+        <button class="tbtn" type="button" id="clean">clean cells</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cols" style="margin-top:14px">
+    <section class="panel editor">
+      <div class="panel-head"><span class="label">source</span>
+        <div class="tgroup-row"><input type="file" id="fileIn" accept=".csv,.tsv,.txt,text/csv" style="font-size:.78rem"></div>
+      </div>
+      <textarea class="codearea" id="src" spellcheck="false" aria-label="CSV source"></textarea>
+      <div class="statgrid" id="meta"></div>
+      <div class="out is-error" id="issues" hidden></div>
+    </section>
+    <section class="panel output">
+      <div class="panel-head"><span class="label">export as</span>
+        <div class="tgroup-row" id="export">
+          <button class="tbtn is-on" type="button" data-kind="csv">CSV</button>
+          <button class="tbtn" type="button" data-kind="tsv">TSV</button>
+          <button class="tbtn" type="button" data-kind="md">Markdown</button>
+          <button class="tbtn" type="button" data-kind="html">HTML</button>
+          <button class="tbtn" type="button" data-kind="json">JSON</button>
+          <button class="tbtn" type="button" data-kind="sql">SQL</button>
+          <button class="tbtn" type="button" id="toMarkdown" title="Same as Markdown, but always copies to the clipboard">copy md</button>
+        </div>
+      </div>
+      <pre class="out" id="out" aria-live="polite"></pre>
+      <div class="inline-fields">
+        <label class="field"><span>table name (SQL)</span><input type="text" id="tableName" value="bench_table"></label>
+        <button class="tbtn" type="button" id="copyOut">copy</button>
+        <button class="tbtn" type="button" id="downloadOut">download</button>
+      </div>
+    </section>
+  </div>
+
+  <section class="panel" style="margin-top:14px">
+    <div class="panel-head"><span class="label">data</span><span class="mini" id="rowNote"></span></div>
+    <div class="tablewrap"><table class="dt" id="grid"></table></div>
+  </section>
+  <section class="panel" style="margin-top:14px">
+    <div class="panel-head"><span class="label">per-column profile — filter and sort first to profile what you are looking at</span></div>
+    <div class="tablewrap"><table class="dt" id="stats"></table></div>
+  </section>
+
+</main>
+<script type="module" src="../../js/tools/csv.js"></script>
+</body>
+</html>

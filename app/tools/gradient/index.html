@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gradients · Bench</title>
+<meta name="description" content="Build linear, radial and conic CSS gradients from a stop list, see the sampled ramp, and get a real legibility verdict — the worst contrast your text would face anywhere across the fill. Nothing leaves the page.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0b0e12">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2f4f4">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Gradients · Bench">
+<meta property="og:description" content="Linear, radial and conic gradients with a sampled ramp and a worst-case contrast verdict for text sitting on top.">
+<meta property="og:image" content="../../assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="icon" href="../../assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/icon-180.png">
+<link rel="stylesheet" href="../../styles.css">
+<script>
+  try {
+    var t = localStorage.getItem("bench.theme.v1");
+    if (t) document.documentElement.dataset.theme = JSON.parse(t);
+    else if (matchMedia("(prefers-color-scheme: light)").matches) document.documentElement.dataset.theme = "light";
+  } catch (e) {}
+</script>
+</head>
+<body data-tool="gradient" data-base="../../">
+<main class="tool">
+  <header class="tool-head">
+    <p class="kicker">tool · gradient</p>
+    <h1>Gradients<br>you can read.</h1>
+    <p class="lede">A stop list in, one CSS value out — and a sampled ramp between them, so the page can tell you the honest thing a generator usually hides: the <em>worst</em> contrast your text hits anywhere across the fill, not the average.</p>
+  </header>
+
+  <div class="toolbar">
+    <div class="tgroup">
+      <span class="label">Type</span>
+      <div class="tgroup-row" id="types">
+        <button class="tbtn is-on" type="button" data-type="linear">linear</button>
+        <button class="tbtn" type="button" data-type="radial">radial</button>
+        <button class="tbtn" type="button" data-type="conic">conic</button>
+      </div>
+      <div class="flagboxes" style="margin-top:8px">
+        <label><input type="checkbox" id="repeat"><span>repeating</span></label>
+      </div>
+      <label class="field" style="margin-top:8px"><span>interpolation</span>
+        <select id="interp">
+          <option value="srgb">srgb (default)</option>
+          <option value="oklab">oklab — no grey dead zone</option>
+          <option value="oklch">oklch</option>
+          <option value="hsl">hsl</option>
+          <option value="oklab longer hue">oklab longer hue</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="tgroup" id="angleRow">
+      <span class="label">Angle <b class="mono" id="angleRead"></b></span>
+      <div class="inline-fields">
+        <input type="range" id="angle" min="0" max="359" step="1" value="120" aria-label="Gradient angle" style="flex:1">
+        <label class="field"><span>deg</span><input type="number" id="angleNum" value="120" min="-360" max="720" step="5" inputmode="numeric"></label>
+      </div>
+      <div class="tgroup-row" id="directions" style="margin-top:8px">
+        <button class="tbtn" type="button" data-dir="to top">↑</button>
+        <button class="tbtn" type="button" data-dir="to top right">↗</button>
+        <button class="tbtn" type="button" data-dir="to right">→</button>
+        <button class="tbtn" type="button" data-dir="to bottom right">↘</button>
+        <button class="tbtn" type="button" data-dir="to bottom">↓</button>
+        <button class="tbtn" type="button" data-dir="to bottom left">↙</button>
+        <button class="tbtn" type="button" data-dir="to left">←</button>
+        <button class="tbtn" type="button" data-dir="to top left">↖</button>
+      </div>
+    </div>
+
+    <div class="tgroup" id="radialRow" hidden>
+      <span class="label">Radial geometry</span>
+      <div class="inline-fields">
+        <label class="field"><span>shape</span>
+          <select id="shape"><option value="circle">circle</option><option value="ellipse">ellipse</option></select>
+        </label>
+        <label class="field"><span>centre (x% y%)</span><input type="text" id="posn" value="50% 50%" spellcheck="false"></label>
+      </div>
+    </div>
+
+    <div class="tgroup">
+      <span class="label">Stops — one per line, position optional</span>
+      <textarea class="codearea" id="stops" spellcheck="false" aria-label="Gradient stops" style="min-height:104px">#0e3b43 0%
+#2c8f8f 55%
+#cfeee4 100%</textarea>
+      <p class="mini" id="stopErrors" hidden style="color:var(--err)"></p>
+      <div class="tgroup-row" style="margin-top:8px">
+        <button class="tbtn" type="button" id="reverse">reverse</button>
+        <button class="tbtn" type="button" id="spread">re-space evenly</button>
+        <button class="tbtn" type="button" id="dedupe">drop repeats</button>
+        <button class="tbtn" type="button" id="randomGrad">random</button>
+      </div>
+    </div>
+
+    <div class="tgroup">
+      <span class="label">Presets</span>
+      <div class="tgroup-row" id="presets">
+        <button class="tbtn" type="button" data-preset="Dusk">Dusk</button>
+        <button class="tbtn" type="button" data-preset="Sea glass">Sea glass</button>
+        <button class="tbtn" type="button" data-preset="Ember">Ember</button>
+        <button class="tbtn" type="button" data-preset="Graphite">Graphite</button>
+        <button class="tbtn" type="button" data-preset="Citrus">Citrus</button>
+        <button class="tbtn" type="button" data-preset="Fog">Fog</button>
+        <button class="tbtn" type="button" data-preset="Fade out">Fade out</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cols" style="margin-top:14px">
+    <section class="panel">
+      <span class="label">Preview</span>
+      <div id="gradPreview" class="grad-preview"><span class="grad-sample">Aa 123 — the part you have to read</span></div>
+      <div class="inline-fields" style="margin-top:10px">
+        <label class="field"><span>text colour</span><input type="color" id="fgCheck" value="#ffffff" style="height:34px;padding:2px"></label>
+        <label class="field"><span>page behind</span><input type="color" id="bgCheck" value="#0b0e12" style="height:34px;padding:2px"></label>
+      </div>
+      <div id="legi" class="tgroup-row" style="margin-top:8px"></div>
+      <span class="label" style="margin-top:12px;display:block">Sampled ramp (click to copy)</span>
+      <div id="ramp" class="ramp is-strip"></div>
+    </section>
+
+    <section class="panel">
+      <span class="label">Output</span>
+      <div class="inline-fields">
+        <label class="field"><span>token name</span><input type="text" id="gname" value="brand" spellcheck="false"></label>
+        <label class="field"><span>format</span>
+          <select id="format">
+            <option value="css">CSS custom property</option>
+            <option value="raw">just the gradient</option>
+            <option value="scss">SCSS variable</option>
+            <option value="tailwind">Tailwind arbitrary value</option>
+            <option value="json">JSON (re-openable)</option>
+          </select>
+        </label>
+      </div>
+      <textarea class="codearea" id="gradOut" spellcheck="false" readonly aria-label="Generated CSS" style="min-height:120px;margin-top:8px"></textarea>
+      <div class="tgroup-row" style="margin-top:8px">
+        <button class="tbtn" type="button" id="copyOut">copy</button>
+        <button class="tbtn" type="button" id="useHere">use as this page's accent</button>
+      </div>
+      <p class="mini">Every value here is produced from the stop list — paste a gradient back in and it is parsed, not guessed. Positions you never wrote are spread evenly; positions you did write are kept exactly.</p>
+    </section>
+  </div>
+</main>
+<script type="module" src="../../js/tools/gradient.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bench — twelve private tools, one tab</title>
+<meta name="description" content="Batch-compress images, format JSON, write a regex, build a gradient, type a scale, derive a theme. Nothing is ever uploaded. Works offline.">
+<meta name="theme-color" content="#0b0e12">
+<meta http-equiv="refresh" content="0; url=app/">
+<link rel="canonical" href="https://pushparaj9749.github.io/portfolio/app/">
+<link rel="preload" href="app/styles.css" as="style">
+<style>
+  /* This page cannot use styles.css — it exists for 0ms — so the palette is inlined
+     here. tools/../tests/palette.test.mjs asserts these four values still equal the
+     generated tokens, because "the redirect is too small to matter" is how a brand
+     spent two rounds of palette work drifting back to its old colours. */
+  html,body{height:100%;margin:0;background:#0b0e12;color:#e7edf2;font:16px/1.6 ui-sans-serif,system-ui,sans-serif;display:grid;place-items:center}
+  a{color:#40d9c1}
+  p{text-align:center;max-width:34ch}
+</style>
+</head>
+<body>
+<p>Opening <a href="app/">Bench — twelve private tools, one tab</a>…</p>
+<script>location.replace("app/" + location.search + location.hash);</script>
+</body>
+</html>

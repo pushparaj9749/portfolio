@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dates, timezones & units · Bench</title>
+<meta name="description" content="Convert unix timestamps in any unit, render an instant across timezones, diff and offset dates, parse durations, and convert units including bytes, temperature and data rates.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0b0e12">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2f4f4">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Dates, timezones & units · Bench">
+<meta property="og:description" content="Convert unix timestamps in any unit, render an instant across timezones, diff and offset dates, parse durations, and convert units including bytes, temperature and data rates.">
+<meta property="og:image" content="../../assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="icon" href="../../assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/icon-180.png">
+<link rel="stylesheet" href="../../styles.css">
+<script>
+  try {
+    var t = localStorage.getItem("bench.theme.v1");
+    if (t) document.documentElement.dataset.theme = JSON.parse(t);
+    else if (matchMedia("(prefers-color-scheme: light)").matches) document.documentElement.dataset.theme = "light";
+  } catch (e) {}
+</script>
+</head>
+<body data-tool="time" data-base="../../">
+<main class="tool">
+  <header class="tool-head">
+    <p class="kicker">tool · dates & units</p>
+    <h1>Dates &<br>units.</h1>
+    <p class="lede">Timestamps in, human answers out: it tells you which unit a number was meant to be instead of guessing silently, renders one instant across eight zones, does the date maths your spreadsheet gets wrong, and converts units from a table you can read.</p>
+  </header>
+
+  <div class="cols cols-3">
+    <section class="panel">
+      <div class="panel-head"><span class="label">instant</span><span class="mini" id="nowNote"></span></div>
+      <label class="field"><span>epoch, or anything Date.parse understands</span>
+        <input type="text" id="epoch" spellcheck="false" style="width:100%;padding:9px 11px;background:var(--bg-2);border:1px solid var(--line);border-radius:9px;color:var(--fg);font-family:var(--mono)" value="">
+      </label>
+      <p class="mini">interpretation: <b class="mono" id="howNote"></b></p>
+      <div class="tgroup-row" id="altRow"></div>
+      <div class="tgroup-row" style="margin-top:6px">
+        <button class="tbtn" type="button" id="nowBtn">now (s)</button>
+        <button class="tbtn" type="button" id="msBtn">now (ms)</button>
+        <button class="tbtn" type="button" id="liveBtn">watch live</button>
+      </div>
+      <div id="instant" style="margin-top:10px"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><span class="label">between two dates</span></div>
+      <div class="inline-fields">
+        <label class="field"><span>from</span><input type="date" id="dateA" style="width:100%;padding:8px;background:var(--bg-2);border:1px solid var(--line);border-radius:9px;color:var(--fg)"></label>
+        <label class="field"><span>to</span><input type="date" id="dateB" style="width:100%;padding:8px;background:var(--bg-2);border:1px solid var(--line);border-radius:9px;color:var(--fg)"></label>
+        <button class="tbtn" type="button" id="swapDates">swap</button>
+      </div>
+      <div id="diffOut" style="margin-top:8px"></div>
+
+      <span class="label" style="display:block;margin-top:14px">offset from a date</span>
+      <div class="inline-fields">
+        <label class="field"><span>start</span><input type="date" id="offBase" style="width:100%;padding:8px;background:var(--bg-2);border:1px solid var(--line);border-radius:9px;color:var(--fg)"></label>
+        <label class="field"><span>amount</span><input type="number" id="offAmount" value="30" style="width:100%;padding:8px;background:var(--bg-2);border:1px solid var(--line);border-radius:9px;color:var(--fg)"></label>
+        <label class="field"><span>unit</span><select id="offUnit"><option>day</option><option>week</option><option>month</option><option>year</option><option>business days</option><option>hour</option></select></label>
+      </div>
+      <div class="tgroup-row" style="margin-top:6px">
+        <button class="tbtn" type="button" data-quick="7">+1w</button>
+        <button class="tbtn" type="button" data-quick="30">+30d</button>
+        <button class="tbtn" type="button" data-quick="90">+90d</button>
+        <button class="tbtn" type="button" data-quick="7" data-sign="-">−1w</button>
+        <button class="tbtn" type="button" data-quick="30" data-sign="-">−30d</button>
+      </div>
+      <p id="offOut" class="mono" style="margin-top:8px;font-size:.9rem"></p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><span class="label">duration</span></div>
+      <label class="field"><span>2h30m · 45s · 1.5d · 500ms</span>
+        <input type="text" id="durIn" spellcheck="false" value="2h30m45s" style="width:100%;padding:9px 11px;background:var(--bg-2);border:1px solid var(--line);border-radius:9px;color:var(--fg);font-family:var(--mono)">
+      </label>
+      <div class="tgroup-row" id="durPresets">
+        <button class="tbtn" type="button" data-preset="90s">90s</button>
+        <button class="tbtn" type="button" data-preset="1h30m">1h30m</button>
+        <button class="tbtn" type="button" data-preset="2.5d">2.5d</button>
+        <button class="tbtn" type="button" data-preset="350ms">350ms</button>
+        <button class="tbtn" type="button" data-preset="12w">12w</button>
+      </div>
+      <div id="durOut" style="margin-top:8px"></div>
+    </section>
+  </div>
+
+  <div class="cols" style="margin-top:14px">
+    <section class="panel">
+      <div class="panel-head"><span class="label">unit conversion</span></div>
+      <div class="inline-fields">
+        <label class="field"><span>kind</span><select id="uKind"></select></label>
+        <label class="field"><span>value</span><input type="text" id="uVal" inputmode="decimal" style="font-family:var(--mono)"></label>
+        <label class="field"><span>from</span><select id="uFrom"></select></label>
+        <label class="field"><span>to</span><select id="uTo"></select></label>
+        <button class="tbtn" type="button" id="uSwap">swap</button>
+      </div>
+      <p id="uOut" style="margin-top:10px"></p>
+      <div class="tablewrap" style="max-height:260px;margin-top:8px"><table class="dt" id="uAll"></table></div>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><span class="label">aspect ratio & percentages</span></div>
+      <div class="inline-fields">
+        <label class="field"><span>width</span><input type="number" id="aw" value="3024"></label>
+        <label class="field"><span>height</span><input type="number" id="ah" value="4032"></label>
+      </div>
+      <div class="tgroup-row" id="aspectPresets">
+        <button class="tbtn" type="button" data-preset="1920x1080">1920×1080</button>
+        <button class="tbtn" type="button" data-preset="1080x1920">reel</button>
+        <button class="tbtn" type="button" data-preset="1080x1080">square</button>
+        <button class="tbtn" type="button" data-preset="2400x1260">og image</button>
+      </div>
+      <p id="aspectOut" class="mono" style="margin-top:8px;font-size:.86rem"></p>
+      <div class="tgroup-row" id="pctKinds" style="margin-top:12px">
+        <button class="tbtn is-on" type="button" data-kind="of">x% of y</button>
+        <button class="tbtn" type="button" data-kind="isWhat">x is what % of y</button>
+        <button class="tbtn" type="button" data-kind="change">% change</button>
+        <button class="tbtn" type="button" data-kind="reverse">reverse %</button>
+        <button class="tbtn" type="button" data-kind="ratio">split ratio</button>
+        <button class="tbtn" type="button" data-kind="gst">GST in/out</button>
+        <button class="tbtn" type="button" data-kind="tip">tip</button>
+      </div>
+      <div class="inline-fields" style="margin-top:8px">
+        <label class="field"><span>x</span><input type="number" id="pa" value="18"></label>
+        <label class="field"><span>y</span><input type="number" id="pb" value="2400"></label>
+        <label class="field"><span>z</span><input type="number" id="pc" value="0"></label>
+      </div>
+      <p id="pctOut" class="mono" style="margin-top:6px;font-size:.9rem"></p>
+    </section>
+  </div>
+
+</main>
+<script type="module" src="../../js/tools/time.js"></script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hash, JWT, UUID & passwords · Bench</title>
+<meta name="description" content="SHA-256, MD5, CRC32 and HMAC for text or files with pure in-page JS, plus JWT decoding, UUID v4/v7, nanoid, and password entropy maths. No network, no upload.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0b0e12">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2f4f4">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hash, JWT, UUID & passwords · Bench">
+<meta property="og:description" content="SHA-256, MD5, CRC32 and HMAC for text or files with pure in-page JS, plus JWT decoding, UUID v4/v7, nanoid, and password entropy maths. No network, no upload.">
+<meta property="og:image" content="../../assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="icon" href="../../assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/icon-180.png">
+<link rel="stylesheet" href="../../styles.css">
+<script>
+  try {
+    var t = localStorage.getItem("bench.theme.v1");
+    if (t) document.documentElement.dataset.theme = JSON.parse(t);
+    else if (matchMedia("(prefers-color-scheme: light)").matches) document.documentElement.dataset.theme = "light";
+  } catch (e) {}
+</script>
+</head>
+<body data-tool="hash" data-base="../../">
+<main class="tool">
+  <header class="tool-head">
+    <p class="kicker">tool · hash & code</p>
+    <h1>Hash<br>& code.</h1>
+    <p class="lede">Digests for text or a file, JWT inspection, identifiers, and password maths. SHA-256 and MD5 here are implemented in this file — so they work on plain <code>http://</code> and <code>file://</code> too, where the platform's crypto API is simply not available.</p>
+  </header>
+
+  <div class="toolbar">
+    <div class="tgroup" style="grid-column:1/-1">
+      <div class="tgroup-row" id="tabs">
+        <button class="tbtn" type="button" data-mode="digest">digest</button>
+        <button class="tbtn" type="button" data-mode="file" style="display:none"></button>
+        <button class="tbtn" type="button" data-mode="jwt">JWT</button>
+        <button class="tbtn" type="button" data-mode="ids">ids & tokens</button>
+        <button class="tbtn" type="button" data-mode="pw">passwords</button>
+        <button class="tbtn" type="button" data-mode="cmp">compare hashes</button>
+      </div>
+    </div>
+    <div class="tgroup" id="fileRow">
+      <span class="label">Or hash a file</span>
+      <input type="file" id="fileIn">
+      <p class="mini" id="fileNote">Read with <code>File.arrayBuffer()</code> — the bytes never leave this tab.</p>
+    </div>
+    <div class="tgroup" id="idsRow" hidden>
+      <span class="label">Identifiers</span>
+      <div class="inline-fields">
+        <label class="field"><span>kind</span><select id="idKind"><option value="uuidv4">UUID v4 (random)</option><option value="uuidv7">UUID v7 (sortable)</option><option value="nanoid">nanoid 21</option><option value="hex">hex 16 bytes</option><option value="b64">base64url 18 bytes</option></select></label>
+        <label class="field"><span>count</span><input type="number" id="idCount" value="10" min="1" max="200"></label>
+        <button class="tbtn" type="button" id="genIds">generate</button>
+      </div>
+    </div>
+    <div class="tgroup" id="pwRow" hidden>
+      <span class="label">Password policy</span>
+      <div class="inline-fields">
+        <label class="field"><span>length — <b class="mono" id="lenOut">20 chars</b></span><input type="range" id="len" min="6" max="64" value="20"></label>
+        <label class="field"><span>passphrase words</span><input type="number" id="pw" value="6" min="3" max="12"></label>
+        <label class="field"><span>separator</span><input type="text" id="sep" value="-" maxlength="3"></label>
+      </div>
+      <div class="inline-fields" style="margin-top:6px">
+        <label class="check"><input type="checkbox" id="cLower" checked><span>a-z</span></label>
+        <label class="check"><input type="checkbox" id="cUpper" checked><span>A-Z</span></label>
+        <label class="check"><input type="checkbox" id="cDigits" checked><span>0-9</span></label>
+        <label class="check"><input type="checkbox" id="cSymbols" checked><span>symbols</span></label>
+      </div>
+      <div class="inline-fields">
+        <label class="check"><input type="checkbox" id="cAmbig" checked><span>avoid Il1O0o</span></label>
+        <label class="check"><input type="checkbox" id="cEach" checked><span>require each class</span></label>
+        <label class="check"><input type="checkbox" id="cap" checked><span>capitalise</span></label>
+        <label class="check"><input type="checkbox" id="num" checked><span>add a number</span></label>
+      </div>
+    </div>
+    <div class="tgroup" id="jwtRow">
+      <span class="label">Notes</span>
+      <p class="mini">Digests run in-page in pure JS; <code>SHA-1/384/512</code> use the platform API when the origin is secure. MD5 and SHA-1 are shown for legacy lookups — never for passwords or signatures.</p>
+    </div>
+  </div>
+
+  <section class="panel" style="margin-top:14px">
+    <div class="panel-head"><span class="label">input</span><span class="mini" id="byteCount"></span></div>
+    <textarea class="codearea" id="src" spellcheck="false" style="min-height:120px" aria-label="Value to hash"></textarea>
+    <div class="tgroup-row" style="margin-top:8px"><button class="tbtn" type="button" id="copyAll">copy all digests</button></div>
+  </section>
+
+  <section class="panel" style="margin-top:14px" id="digestTable">
+    <div class="panel-head"><span class="label">digests</span></div>
+    <div class="tablewrap"><table class="dt" id="algoList"></table></div>
+  </section>
+
+  <section class="panel" style="margin-top:14px" id="jwtOut" hidden></section>
+  <section class="panel" style="margin-top:14px" id="pwOut" hidden></section>
+
+</main>
+<script type="module" src="../../js/tools/hash.js"></script>
+</body>
+</html>

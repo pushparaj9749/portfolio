@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bench — private image workbench. Batch compress, resize, convert. No uploads.</title>
+<meta name="description" content="Free browser tool to compress, resize, convert and strip metadata from JPG, PNG, WebP and AVIF in bulk. Your files never leave the tab — nothing is uploaded. Works offline once loaded.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0b0e12">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2f4f4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="canonical" href="https://pushparaj9749.github.io/portfolio/app/images/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bench — private image workbench">
+<meta property="og:description" content="Batch compress · resize · convert · strip GPS and EXIF. 100% in your browser, 0 uploads, works offline.">
+<meta property="og:image" content="../assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/icon-180.png">
+<link rel="stylesheet" href="../styles.css">
+<script>
+  // Paint the saved theme before first frame to avoid a flash.
+  try {
+    var t = localStorage.getItem("bench.theme.v1");
+    if (t) document.documentElement.dataset.theme = JSON.parse(t);
+    else if (matchMedia("(prefers-color-scheme: light)").matches) document.documentElement.dataset.theme = "light";
+  } catch (e) {}
+</script>
+</head>
+<body data-tool="images" data-base="../">
+<a class="skip" href="#fileInput">Skip to your files</a>
+
+
+
+<main class="tool">
+  <!-- ============ HERO ============ -->
+  <header class="tool-head">
+    <p class="kicker" id="loadState">loading workbench…</p>
+    <h1>Image<br>workbench.</h1>
+    <p class="lede">Compress, resize and convert a batch of photos without one byte of them leaving this tab. Real encoders in web workers, a before/after you can trust, and a zip when you are done.</p>
+    <div class="hero-meta">
+      <span class="pill is-neutral">0 uploads · 0 servers</span>
+      <span id="engineBadge" class="mono">engine: probing…</span>
+    </div>
+  </header>
+
+  <div class="workbench">
+    <aside class="panel controls" aria-label="Processing options">
+      <div class="panel-head">
+        <span class="label">Recipe</span>
+        <button id="resetBtn" class="link" type="button">reset</button>
+      </div>
+
+      <fieldset class="group">
+        <legend>Output format</legend>
+        <div id="formatList" class="radio-cards" role="radiogroup"></div>
+        <p class="hint" id="formatNote"></p>
+      </fieldset>
+
+      <fieldset class="group">
+        <legend>Resize</legend>
+        <label class="field">
+          <span>Mode</span>
+          <select id="resizeMode">
+            <option value="max">Cap longest edge (never enlarge)</option>
+            <option value="none">Keep original size</option>
+            <option value="percent">Scale by percentage</option>
+            <option value="width">Set width, keep ratio</option>
+            <option value="height">Set height, keep ratio</option>
+          </select>
+        </label>
+        <label class="field" data-when="max">
+          <span>Longest edge (px)</span>
+          <input id="maxDim" type="number" min="16" max="8192" step="1" inputmode="numeric">
+        </label>
+        <label class="field" data-when="percent">
+          <span>Scale (%)</span>
+          <input id="percent" type="number" min="5" max="400" step="1" inputmode="numeric">
+        </label>
+        <div class="field-row" data-when="width">
+          <label class="field">
+            <span>Width (px)</span>
+            <input id="width" type="number" min="16" max="8192" step="1" inputmode="numeric">
+          </label>
+          <p class="mini mono" data-out="width">→ —</p>
+        </div>
+        <div class="field-row" data-when="height">
+          <label class="field">
+            <span>Height (px)</span>
+            <input id="height" type="number" min="16" max="8192" step="1" inputmode="numeric">
+          </label>
+          <p class="mini mono" data-out="height">→ —</p>
+        </div>
+      </fieldset>
+
+      <fieldset class="group">
+        <legend>Quality</legend>
+        <label class="field">
+          <span class="row-between"><em>Encoder quality</em> <b class="mono" id="qualityOut">82</b></span>
+          <input id="quality" type="range" min="35" max="100" step="1">
+        </label>
+        <p class="mini">Lower = smaller file. <b>80–88</b> is the sweet spot for photos. Ignored for PNG.</p>
+      </fieldset>
+
+      <fieldset class="group">
+        <legend>Privacy</legend>
+        <label class="check">
+          <input id="stripMeta" type="checkbox">
+          <span>Strip EXIF, GPS coordinates, colour profile and camera details</span>
+        </label>
+        <p class="mini">Re-encoding discards all of it — photos can otherwise reveal where they were taken.</p>
+        <label class="check">
+          <input id="skipIfLarger" type="checkbox">
+          <span>Skip files that would end up bigger</span>
+        </label>
+      </fieldset>
+
+      <fieldset class="group">
+        <legend>File names</legend>
+        <label class="check">
+          <input id="keepName" type="checkbox">
+          <span>Keep original names exactly</span>
+        </label>
+        <label class="field" id="suffixField">
+          <span>Append to name</span>
+          <input id="suffix" type="text" maxlength="24" spellcheck="false" autocomplete="off" placeholder="-compressed">
+        </label>
+      </fieldset>
+
+      <div class="panel-foot">
+        <kbd>o</kbd> add files · <kbd>r</kbd> run · <kbd>z</kbd> zip
+      </div>
+    </aside>
+
+    <section class="stage" aria-label="Files and results">
+      <!-- dropzone -->
+      <label class="dropzone" id="dropzone" tabindex="0">
+        <input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp,image/avif,image/gif,image/bmp" multiple>
+        <span class="dz-icon" aria-hidden="true"></span>
+        <span class="dz-title">Drop images here, or <u>browse</u></span>
+        <span class="dz-sub">paste from clipboard works too · JPG · PNG · WebP · AVIF · GIF · BMP</span>
+        <span class="dz-count mono" id="dzCount" aria-live="polite"></span>
+      </label>
+
+      <!-- totals -->
+      <div class="totals" id="totals" hidden>
+        <div class="totals-row">
+          <div class="stat">
+            <span class="stat-label">before</span>
+            <b class="stat-value mono" data-t="before">—</b>
+          </div>
+          <div class="totals-bar" aria-hidden="true"><i data-t="bar"></i></div>
+          <div class="stat stat-right">
+            <span class="stat-label">after</span>
+            <b class="stat-value mono" data-t="after">—</b>
+          </div>
+        </div>
+        <p class="totals-note" role="status" aria-live="polite">
+          <b data-t="saved">—</b> saved across
+          <b data-t="count">0</b> files
+          <span class="dim">· <b data-t="time">—</b> on this machine</span>
+        </p>
+      </div>
+
+      <!-- results -->
+      <div id="results" class="results" aria-busy="false"></div>
+
+      <p class="empty" id="emptyState">Nothing here yet. Add a few images and the recipe on the left runs instantly.</p>
+
+      <div class="actions" id="actions" hidden>
+        <button id="runBtn" class="btn" type="button"><span data-t="runLabel">Re-run</span><i class="btn-hint" data-t="runHint"></i></button>
+        <button id="zipBtn" class="btn btn-accent magnetic" type="button">Download all as .zip<i class="btn-hint" data-t="zipHint"></i></button>
+        <button id="clearBtn" class="btn btn-ghost" type="button">Clear</button>
+      </div>
+
+      <table class="sr-only" id="srTable" aria-label="Processing results"></table>
+    </section>
+  </div>
+
+  <!-- ============ TRUST / HOW ============ -->
+  <section class="how" id="how" aria-labelledby="howTitle">
+    <h2 class="section-title" id="howTitle"><span>How it works</span><span class="dim">and why it can't see you</span></h2>
+    <div class="how-grid">
+      <article class="how-card">
+        <h3>1 · Nothing is uploaded</h3>
+        <p>Decoding and encoding happen inside a <b>Web Worker</b> using <code>OffscreenCanvas</code>.
+        There is no API on the other end — this file is static. The counter in the header is a real
+        network audit: it wraps <code>fetch</code>, <code>XMLHttpRequest</code> and
+        <code>sendBeacon</code> and shows every off-origin request. It should stay <b class="accent">0</b>.</p>
+      </article>
+      <article class="how-card">
+        <h3>2 · Re-encoding is what strips metadata</h3>
+        <p>Drawing a decoded bitmap to a fresh canvas keeps pixels and discards everything else:
+        EXIF camera data, GPS coordinates, colour profiles, thumbnails, software tags. We show you which
+        markers were found in the original so you can check our work.</p>
+      </article>
+      <article class="how-card">
+        <h3>3 · Parallel by default</h3>
+        <p>A pool of workers sized to your CPU chews through a batch at once, so 60 phone photos take
+        seconds, not minutes. No browser support? The identical pipeline falls back to the main
+        thread instead of failing.</p>
+      </article>
+      <article class="how-card">
+        <h3>4 · Bulk output that behaves</h3>
+        <p>Downloads are generated as <code>blob:</code> URLs — no round trip. "Download all" builds a
+        standard <b>.zip</b> by hand (STORE entries + CRC-32), so you get one file with sane names
+        and no 60 download prompts.</p>
+      </article>
+    </div>
+    <div class="trust" id="privacyNote" role="group" aria-label="Privacy details">
+      <ul class="trust-list">
+        <li>Off-origin requests: <b class="mono" data-p="out">0</b></li>
+        <li>Total bytes transferred: <b class="mono" data-p="bytes">—</b></li>
+        <li>Storage used: <b class="mono" data-p="storage">—</b> <span class="dim">(your settings only)</span></li>
+        <li>Analytics / ads / tracking scripts: <b class="mono">0</b></li>
+      </ul>
+      <p class="trust-note" data-p="note">Files stay in memory and vanish when you close the tab.</p>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <details class="faq">
+    <summary>Is my phone or camera data really in there?</summary>
+    <p>Usually yes. A photo taken on a phone commonly carries make/model, exposure, lens, timestamp,
+    device orientation, a thumbnail, and often <b>latitude and longitude</b>. Anyone who gets the file can
+    read it with a hex editor. Run the strip option before you post anything personal.</p>
+  </details>
+  <details class="faq">
+    <summary>Will I lose quality?</summary>
+    <p>Any lossy encoder trades bytes for detail, so yes — a little, by design. Quality 82–88 is visually
+    indistinguishable from the original for photos on screens. PNG output is lossless, and "keep original
+    size" only changes the container and metadata.</p>
+  </details>
+  <details class="faq">
+    <summary>Why does an AVIF/PNG come out bigger than my JPEG?</summary>
+    <p>Small, noisy or already-optimised images often gain nothing from another lossy pass, and PNG is a poor
+    fit for photographs. Turn on <em>"skip files that would end up bigger"</em> and Bench keeps the original
+    bytes for those entries.</p>
+  </details>
+  <details class="faq">
+    <summary>Why is it faster than the other tools?</summary>
+    <p>Because there's no upload. A 12&nbsp;MB photo over a mobile connection can cost more time in transit
+    than in processing; here the only cost is your CPU, split across every core it can find.</p>
+  </details>
+
+  <footer class="foot">
+    <p>Bench <span class="mono" id="version">v1.0.0</span> — a static, dependency-free web app.
+    No account, no cookie banner, no reason to leave.</p>
+    <p class="dim">Built by <a href="https://github.com/pushparaj9749" rel="noopener">pushparaj9749</a> ·
+    <a href="https://github.com/pushparaj9749/portfolio" rel="noopener">source</a></p>
+  </footer>
+</main>
+
+<noscript>
+  <p class="noscript">Bench processes images with JavaScript, so it needs scripting enabled.
+  Nothing is ever sent anywhere — the code that does the work is the page you're reading.</p>
+</noscript>
+
+<div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+  <script type="module" src="../js/images.js"></script>
+</body>
+</html>

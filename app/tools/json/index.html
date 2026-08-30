@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JSON formatter & validator · Bench</title>
+<meta name="description" content="Pretty-print, minify and validate JSON with the exact error line and column. Sort keys, flatten to a table, query a dot path, drop nulls, export YAML or CSV. Everything local.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0b0e12">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2f4f4">
+<meta property="og:type" content="website">
+<meta property="og:title" content="JSON formatter & validator · Bench">
+<meta property="og:description" content="Pretty-print, minify and validate JSON with the exact error line and column. Sort keys, flatten to a table, query a dot path, drop nulls, export YAML or CSV. Everything local.">
+<meta property="og:image" content="../../assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="icon" href="../../assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/icon-180.png">
+<link rel="stylesheet" href="../../styles.css">
+<script>
+  try {
+    var t = localStorage.getItem("bench.theme.v1");
+    if (t) document.documentElement.dataset.theme = JSON.parse(t);
+    else if (matchMedia("(prefers-color-scheme: light)").matches) document.documentElement.dataset.theme = "light";
+  } catch (e) {}
+</script>
+</head>
+<body data-tool="json" data-base="../../">
+<main class="tool">
+  <header class="tool-head">
+    <p class="kicker">tool · json</p>
+    <h1>JSON<br>workbench.</h1>
+    <p class="lede">Format, minify, validate and reshape JSON. Errors point at the exact line and column with a caret, the whole tree flattens to a searchable table, and a dot path pulls one value out of a 2 MB payload.</p>
+  </header>
+
+  <div class="toolbar">
+    <div class="tgroup">
+      <span class="label">Mode</span>
+      <div class="tgroup-row" id="mode">
+        <button class="tbtn is-on" type="button" data-mode="pretty">pretty</button>
+        <button class="tbtn" type="button" data-mode="min">minified</button>
+      </div>
+      <div class="inline-fields" style="margin-top:9px">
+        <label class="field"><span>indent</span>
+          <select id="indent"><option value="2">2 spaces</option><option value="4">4 spaces</option><option value="tab">tab</option></select>
+        </label>
+        <label class="check"><input type="checkbox" id="sortKeys"><span>sort keys</span></label>
+      </div>
+    </div>
+    <div class="tgroup">
+      <span class="label">Transform</span>
+      <div class="tgroup-row">
+        <button class="tbtn" type="button" id="minify">minify</button>
+        <button class="tbtn" type="button" id="sortNow">sort keys</button>
+        <button class="tbtn" type="button" id="stripEmpty">drop nulls + empties</button>
+        <button class="tbtn" type="button" id="toYaml">to YAML</button>
+        <button class="tbtn" type="button" id="toCsv">to CSV</button>
+      </div>
+    </div>
+    <div class="tgroup">
+      <span class="label">Fetch one value</span>
+      <label class="field"><span>path — <code>a.b[0].c</code>, <code>$.a.b</code> or <code>/a/b</code></span>
+        <input type="text" id="pathQuery" spellcheck="false" value="flags[0].name">
+      </label>
+      <pre class="out" id="pathOut" style="min-height:auto"></pre>
+    </div>
+  </div>
+
+  <div class="cols">
+    <section class="panel editor">
+      <div class="panel-head"><span class="label">input</span><span class="pill is-neutral" id="status">…</span></div>
+      <textarea class="codearea" id="src" spellcheck="false" aria-label="JSON input"></textarea>
+      <div class="statgrid">
+        <div class="statbox"><span class="stat-label">utf-8</span><b data-stat="bytes">—</b></div>
+        <div class="statbox"><span class="stat-label">objects</span><b data-type="object">0</b></div>
+        <div class="statbox"><span class="stat-label">arrays</span><b data-type="array">0</b></div>
+        <div class="statbox"><span class="stat-label">strings</span><b data-type="string">0</b></div>
+        <div class="statbox"><span class="stat-label">numbers</span><b data-type="number">0</b></div>
+        <div class="statbox"><span class="stat-label">nulls</span><b data-type="null">0</b></div>
+        <div class="statbox"><span class="stat-label">booleans</span><b data-type="boolean">0</b></div>
+      </div>
+      <div class="tgroup-row">
+        <button class="tbtn" type="button" id="copyOut">copy result</button>
+        <button class="tbtn" type="button" id="downloadOut">download</button>
+      </div>
+    </section>
+    <section class="panel output">
+      <div class="panel-head"><span class="label">output</span></div>
+      <pre class="out" id="out" aria-live="polite"></pre>
+    </section>
+  </div>
+
+  <section class="panel" style="margin-top:14px">
+    <div class="panel-head"><span class="label">flattened tree — click any cell in the output to search with Ctrl/Cmd+F</span></div>
+    <div class="tablewrap"><table class="dt" id="tree"></table></div>
+  </section>
+
+  <p class="note">Validation is <code>JSON.parse</code> itself — the same engine your browser will use — so “valid” here means valid for real, with the position from the parse error rather than a hand-rolled guess.</p>
+
+</main>
+<script type="module" src="../../js/tools/json.js"></script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bench — private browser tools that never upload anything</title>
+<meta name="description" content="Eight everyday tools — images, text, JSON, colour, hashes, regex, CSV and dates — that run entirely in your tab. No account, no upload, no server, works offline once loaded.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0b0e12">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2f4f4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bench — twelve browser tools, zero uploads">
+<meta property="og:description" content="Compress images, format JSON, check contrast, hash files, test regex, reshape CSV and convert dates. Everything runs in the tab you are already in.">
+<meta property="og:image" content="assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://pushparaj9749.github.io/portfolio/app/">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="stylesheet" href="styles.css">
+<script>
+  // Paint the saved theme before the first frame so nothing flashes.
+  try {
+    var t = localStorage.getItem("bench.theme.v1");
+    if (t) document.documentElement.dataset.theme = JSON.parse(t);
+    else if (matchMedia("(prefers-color-scheme: light)").matches) document.documentElement.dataset.theme = "light";
+  } catch (e) {}
+</script>
+</head>
+<body data-base="">
+
+<main class="tool hub">
+  <header class="hero">
+    <p class="kicker" id="loadState">twelve tools · one page · no server</p>
+    <h1 class="hero-title">
+      The boring tools<br>
+      <span class="accent-word">you actually use</span>,<br>
+      with nothing in the middle.
+    </h1>
+    <p class="hero-lede">
+      Compress a folder of photos. Reformat a 4 MB JSON blob. Find out if that green passes contrast.
+      Hash a download, write a regex, clean a CSV, turn a timestamp into a date.
+      All of it happens in the tab you are reading — Bench has no backend to send anything to.
+    </p>
+    <div class="hub-search">
+      <label class="sr-only" for="q">Search the tools</label>
+      <input id="q" type="search" placeholder="Search — “csv”, “contrast”, “uuid”, “timezone”…" autocomplete="off" spellcheck="false">
+      <span class="kbd-hint" aria-hidden="true">/</span>
+    </div>
+    <div class="hero-meta">
+      <span class="pill" id="count" role="status" aria-live="polite">12 tools · 0 bytes uploaded</span>
+      <span class="pill is-ghost">no account</span>
+      <span class="pill is-ghost">works offline</span>
+      <span class="pill is-ghost">0 dependencies</span>
+    </div>
+    <p class="recent" id="recent" hidden></p>
+  </header>
+
+  <section class="grid-section" aria-labelledby="gridTitle">
+    <h2 class="section-title" id="gridTitle"><span>Pick a tool</span><span class="dim">each one is a single page</span></h2>
+    <div class="hub-grid" id="grid">
+      <noscript>
+        <p class="lede">Bench's grid is rendered from its tool registry, so it needs scripting on. The tools themselves are just pages:</p>
+        <ul>
+          <li><a href="images/">Images — batch compress, resize, convert, strip EXIF</a></li>
+          <li><a href="tools/text/">Text — case, line ops, counts, encodings</a></li>
+          <li><a href="tools/json/">JSON — format, validate, flatten, query</a></li>
+          <li><a href="tools/color/">Colour — palettes, conversions, WCAG contrast</a></li>
+          <li><a href="tools/hash/">Hash &amp; code — digests, JWT, UUID, passwords</a></li>
+          <li><a href="tools/regex/">Regex — live matches and an explainer</a></li>
+          <li><a href="tools/csv/">Tables — CSV, TSV, JSON, Markdown</a></li>
+          <li><a href="tools/time/">Dates &amp; units — epochs, zones, conversions</a></li>
+        </ul>
+      </noscript>
+    </div>
+  </section>
+
+  <section class="how" id="how" aria-labelledby="howTitle">
+    <h2 class="section-title" id="howTitle"><span>Why it is built like this</span><span class="dim">and how to check me</span></h2>
+    <div class="how-grid">
+      <article class="how-card">
+        <h3>No server to trust</h3>
+        <p>There is no API, no analytics and no CDN. The page is 0 dependencies, so the whole thing is
+        <b class="accent">measurable</b>: open devtools, sort network by domain, and you should see exactly one —
+        the one serving this page. The badge in the header counts off-origin requests live by wrapping
+        <code>fetch</code>, <code>XMLHttpRequest</code> and <code>sendBeacon</code>. It should stay <b class="accent">0</b>.</p>
+      </article>
+      <article class="how-card">
+        <h3>The maths is testable, not vibes</h3>
+        <p>Every tool's logic is a plain ES module of pure functions — <code>sha256()</code>, <code>diffDates()</code>,
+        <code>parseCsv()</code>, <code>contrastRatio()</code> — imported by a Node test-suite that checks them against
+        reference implementations: the Web Crypto API, Node's <code>crypto</code>, RFC 4180, the WCAG formula.
+        When a test disagrees with the page, the page gets fixed.</p>
+      </article>
+      <article class="how-card">
+        <h3>Yours, then gone</h3>
+        <p>Pasted text lives in memory and, where it helps, in <i>this browser's</i> local storage so a refresh
+        does not eat your work. Close the tab and it is unreachable. There is no account to delete because
+        there was never an account.</p>
+      </article>
+      <article class="how-card">
+        <h3>Installable, and it works on a plane</h3>
+        <p>A service worker caches the shell, so after the first visit every tool opens with the wifi off.
+        Install it from your browser's address bar and it behaves like an app — one you can keep in a
+        folder of bookmarks for the next ten years.</p>
+      </article>
+    </div>
+
+    <div class="trust" role="group" aria-label="Live network audit">
+      <ul class="trust-list">
+        <li>Off-origin requests: <b class="mono" data-p="out">0</b></li>
+        <li>Bytes you paid to transfer: <b class="mono" data-stat="payload">measuring…</b></li>
+        <li>Third-party resources: <b class="mono" data-stat="external">0</b></li>
+        <li>Storage used: <b class="mono" data-p="storage">—</b> <span class="dim">(your settings only)</span></li>
+        <li>Analytics / ads / tracking scripts: <b class="mono">0</b></li>
+      </ul>
+      <p class="trust-note" data-p="note">Everything above is read from the browser's own counters while you look at it.</p>
+    </div>
+  </section>
+
+  <details class="faq">
+    <summary>Is “no upload” actually true, or marketing?</summary>
+    <p>There is no code path that could upload. No server URL exists to post to, and the page loads no
+    third-party script. If you want to verify it: devtools → Network → add a filter for
+    <code>-is:from-this-origin</code>. Anything you type stays in the DOM. On the images tool, files are read
+    with <code>createImageBitmap()</code> and re-encoded with <code>canvas.convertToBlob()</code>, both local APIs.</p>
+  </details>
+  <details class="faq">
+    <summary>Why not just use an online converter?</summary>
+    <p>Because most of them do the same work in the browser anyway, and then hand you a billboard, a
+    cookie wall and an upload step that quietly puts your passport scan on someone's disk. Bench is
+    slower to find and faster to use: no upload queue, no size cap, no “create an account to download”.</p>
+  </details>
+  <details class="faq">
+    <summary>My hashes look right — can I trust a web page with security work?</summary>
+    <p>For checksums and lookups, yes: SHA-256 here is a plain implementation of FIPS 180-4 and matches
+    <code>crypto.subtle</code> and <code>sha256sum</code> on every input we test. For <i>secrets</i>, don't paste a
+    private key into any website, including one that cannot read it. Use <code>openssl</code> or <code>shasum</code>
+    for anything that would hurt to leak; use this page to check a download or to find the right UUID format.</p>
+  </details>
+  <details class="faq">
+    <summary>Does it work in a private window, or offline?</summary>
+    <p>Private windows: yes, though the browser may refuse local storage — Bench degrades to “nothing is
+    remembered” instead of failing. Offline: yes after one visit, because the shell is precached. On
+    <code>file://</code> the pure-JS tools keep working; the image tool's worker may not, since workers need an
+    http origin, so we tell you and fall back to the main thread.</p>
+  </details>
+  <details class="faq">
+    <summary>Can I run my own copy?</summary>
+    <p>Fork it, drop the <code>app/</code> folder on any static host — GitHub Pages, Netlify, an S3 bucket, a
+    folder on a NAS. There is no build step, no lockfile and nothing to configure. If you do host it,
+    put it behind https so the platform crypto API and the service worker both work.</p>
+  </details>
+
+  <footer class="foot">
+    <p>Bench <span class="mono" id="version">v1.1.0</span> — a static, dependency-free web app.
+    Everything here is either in this folder or in your browser.</p>
+    <p class="dim">Built by <a href="https://github.com/pushparaj9749" rel="noopener">pushparaj9749</a> ·
+    <a href="https://github.com/pushparaj9749/portfolio" rel="noopener">source</a> · MIT ·
+    <span class="mono">0</span> requests off-origin</p>
+  </footer>
+</main>
+
+<p class="noscript">
+  Bench is a set of local tools written in plain JavaScript, so it needs scripting enabled —
+  the code that does the work is the page you are reading.
+</p>
+
+<div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<script type="module" src="js/hub.js"></script>
+</body>
+</html>
