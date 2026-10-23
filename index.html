@@ -1,26 +1,321 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bench — twelve private tools, one tab</title>
-<meta name="description" content="Batch-compress images, format JSON, write a regex, build a gradient, type a scale, derive a theme. Nothing is ever uploaded. Works offline.">
-<meta name="theme-color" content="#0b0e12">
-<meta http-equiv="refresh" content="0; url=app/">
-<link rel="canonical" href="https://pushparaj9749.github.io/portfolio/app/">
-<link rel="preload" href="app/styles.css" as="style">
-<style>
-  /* This page cannot use styles.css — it exists for 0ms — so the palette is inlined
-     here. tools/../tests/palette.test.mjs asserts these four values still equal the
-     generated tokens, because "the redirect is too small to matter" is how a brand
-     spent two rounds of palette work drifting back to its old colours. */
-  html,body{height:100%;margin:0;background:#0b0e12;color:#e7edf2;font:16px/1.6 ui-sans-serif,system-ui,sans-serif;display:grid;place-items:center}
-  a{color:#40d9c1}
-  p{text-align:center;max-width:34ch}
-</style>
-</head>
-<body>
-<p>Opening <a href="app/">Bench — twelve private tools, one tab</a>…</p>
-<script>location.replace("app/" + location.search + location.hash);</script>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#10211b">
+    <meta name="description" content="Ankit is an independent web designer and developer creating clear, credible and conversion-focused websites for local businesses.">
+    <meta name="author" content="Ankit">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ankit — Web Designer & Developer">
+    <meta property="og:description" content="Websites that turn local searches into real enquiries. Strategy, design, development and launch.">
+    <meta property="og:url" content="https://pushparaj9749.github.io/portfolio/">
+    <meta property="og:image" content="https://pushparaj9749.github.io/portfolio/assets/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Ankit — websites for ambitious local businesses">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://pushparaj9749.github.io/portfolio/">
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
+    <title>Ankit — Web Designer &amp; Developer for Local Businesses</title>
+    <script src="./script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <header class="site-header" data-header>
+      <div class="container header-inner">
+        <a class="brand" href="#top" aria-label="Ankit — back to top">
+          <span class="brand-mark" aria-hidden="true">A<span>.</span></span>
+          <span class="brand-copy">
+            <strong>Ankit</strong>
+            <small>Web designer &amp; developer</small>
+          </span>
+        </a>
+
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation" data-menu-toggle>
+          <span></span><span></span>
+        </button>
+
+        <nav class="site-nav" id="site-nav" aria-label="Primary navigation" data-nav>
+          <a href="#work">Work</a>
+          <a href="#services">Services</a>
+          <a href="#process">Process</a>
+          <a href="#about">About</a>
+          <a class="nav-cta" href="#contact">Start a project <span aria-hidden="true">↗</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="hero" id="top">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> Websites for ambitious local businesses</p>
+            <h1>Turn local searches into <em>real enquiries.</em></h1>
+            <p class="hero-intro">I’m Ankit, an independent web designer and developer. I create clear, credible websites that help gyms, coaching centres and local businesses turn online attention into conversations.</p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#contact">Discuss your project <span aria-hidden="true">↗</span></a>
+              <a class="text-link" href="#work">Explore my work <span aria-hidden="true">↓</span></a>
+            </div>
+            <ul class="hero-assurances" aria-label="What is included">
+              <li>Mobile-first</li>
+              <li>Clear scope</li>
+              <li>Launch support</li>
+            </ul>
+          </div>
+
+          <div class="hero-showcase" role="group" aria-label="Fitness website design concept">
+            <div class="showcase-label"><span>Design concept</span><span>Fitness / 01</span></div>
+            <div class="browser-frame">
+              <div class="browser-bar" aria-hidden="true">
+                <span class="browser-dots"><i></i><i></i><i></i></span>
+                <span class="browser-address">yourbusiness.com</span>
+                <span class="browser-more">•••</span>
+              </div>
+              <div class="fitness-preview">
+                <div class="preview-nav">
+                  <strong>FORGE<span>®</span></strong>
+                  <span>TRAIN WITH US &nbsp; ↗</span>
+                </div>
+                <div class="preview-hero">
+                  <p>NO EGO. JUST PROGRESS.</p>
+                  <h2>Stronger<br>every day.</h2>
+                  <span class="preview-button">BOOK A FREE TRIAL &nbsp; →</span>
+                  <div class="preview-orbit" aria-hidden="true">
+                    <svg viewBox="0 0 180 180" role="presentation">
+                      <circle cx="90" cy="90" r="70" fill="none" stroke="currentColor" stroke-width="1" opacity=".45"/>
+                      <circle cx="90" cy="90" r="48" fill="currentColor" opacity=".13"/>
+                      <path d="M55 78v24M65 68v44M115 68v44M125 78v24M65 90h50" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+                      <path d="M48 80v20M132 80v20" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="preview-cards" aria-hidden="true">
+                  <div><small>01 / TRAIN</small><strong>Strength</strong><span>Build your foundation →</span></div>
+                  <div><small>02 / MOVE</small><strong>Conditioning</strong><span>Find your momentum →</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="floating-note floating-note-top" aria-hidden="true"><span class="note-icon">↗</span><div><strong>Built for action</strong><small>Call. Book. Enquire.</small></div></div>
+            <div class="floating-note floating-note-bottom" aria-hidden="true"><span class="note-icon note-icon-dark">A</span><div><strong>Made to feel like you</strong><small>Not another generic template.</small></div></div>
+          </div>
+        </div>
+        <div class="container specialisms">
+          <span>Designed for</span>
+          <ul>
+            <li>Fitness &amp; wellness</li>
+            <li>Education</li>
+            <li>Interior studios</li>
+            <li>Local services</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section work-section" id="work">
+        <div class="container">
+          <div class="section-heading split-heading">
+            <div>
+              <p class="eyebrow">Selected concepts / 2026</p>
+              <h2>Design with a<br><em>job to do.</em></h2>
+            </div>
+            <div class="heading-aside">
+              <p>Good design is not decoration. It answers questions, builds confidence and gives the customer a clear next step.</p>
+              <small>These are self-initiated concept projects, presented to show my design direction—not client work.</small>
+            </div>
+          </div>
+
+          <div class="project-grid">
+            <article class="project-card">
+              <div class="project-visual project-visual-fitness">
+                <div class="visual-topline"><span>FORGE FITNESS</span><span>FREE TRIAL ↗</span></div>
+                <div class="visual-title"><small>YOUR STRONGEST CHAPTER</small><strong>Train with<br>purpose.</strong></div>
+                <div class="visual-badge">01<br><span>START</span></div>
+                <div class="visual-footer"><span>STRENGTH</span><span>CONDITIONING</span><span>MOBILITY</span></div>
+              </div>
+              <div class="project-info">
+                <p class="project-kicker">Fitness / Website concept</p>
+                <h3>Forge Fitness</h3>
+                <p>A high-energy landing page that puts programmes, credibility and free-trial booking within easy reach.</p>
+                <ul class="tag-list"><li>Strategy</li><li>UI design</li><li>Booking flow</li></ul>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="project-visual project-visual-education">
+                <div class="visual-topline"><span>NORTHSTAR / CLASSES</span><span>MENU +</span></div>
+                <div class="education-copy"><small>LEARN WITH DIRECTION</small><strong>A clearer path<br>to your next goal.</strong></div>
+                <div class="course-slip">
+                  <span>ADMISSIONS OPEN</span>
+                  <strong>Find your programme</strong>
+                  <div><i>Foundation</i><i>Advanced</i></div>
+                  <b>EXPLORE COURSES →</b>
+                </div>
+              </div>
+              <div class="project-info">
+                <p class="project-kicker">Education / Website concept</p>
+                <h3>Northstar Classes</h3>
+                <p>A structured admissions experience that helps students and parents understand courses without the clutter.</p>
+                <ul class="tag-list"><li>Content design</li><li>Course discovery</li><li>Enquiry flow</li></ul>
+              </div>
+            </article>
+
+            <article class="project-card project-card-wide">
+              <div class="project-visual project-visual-interior">
+                <div class="visual-topline"><span>STUDIO NIVA</span><span>VIEW SPACES ↗</span></div>
+                <svg class="room-illustration" viewBox="0 0 700 340" role="img" aria-label="Minimal interior design illustration">
+                  <rect width="700" height="340" fill="#d9d0c2"/>
+                  <path d="M0 270L350 165L700 270V340H0Z" fill="#c0b29f"/>
+                  <path d="M350 0V165L0 270M350 165L700 270" fill="none" stroke="#aa9b87" stroke-width="2"/>
+                  <rect x="55" y="60" width="145" height="110" rx="2" fill="#ede8df" stroke="#b6a895" stroke-width="5"/>
+                  <path d="M127.5 60V170M55 115H200" stroke="#b6a895" stroke-width="3"/>
+                  <circle cx="570" cy="72" r="36" fill="#ee704b" opacity=".88"/>
+                  <path d="M570 108V254M542 254H598" stroke="#4d554d" stroke-width="5"/>
+                  <path d="M224 196H480C499 196 514 211 514 230V270H190V230C190 211 205 196 224 196Z" fill="#5f6b5f"/>
+                  <path d="M215 270V292M489 270V292" stroke="#3b443c" stroke-width="8"/>
+                  <rect x="218" y="171" width="120" height="67" rx="18" fill="#748171"/>
+                  <rect x="346" y="171" width="120" height="67" rx="18" fill="#748171"/>
+                  <path d="M320 213C320 197 332 185 348 185C364 185 376 197 376 213V242H320Z" fill="#d6a967"/>
+                  <path d="M85 247C85 214 111 188 144 188C177 188 203 214 203 247" fill="#bd6648"/>
+                  <path d="M144 247V296M119 296H169" stroke="#714b3d" stroke-width="6"/>
+                  <path d="M630 239V171M630 196C605 191 598 172 602 155C620 158 632 170 630 196ZM630 214C653 207 663 189 659 173C642 176 629 190 630 214Z" fill="#68765f" stroke="#68765f" stroke-width="4"/>
+                  <path d="M608 239H652L645 284H615Z" fill="#a78364"/>
+                </svg>
+                <div class="interior-caption"><span>RESIDENTIAL / 2026</span><strong>Spaces that feel<br>like you.</strong></div>
+              </div>
+              <div class="project-info">
+                <p class="project-kicker">Interior design / Website concept</p>
+                <h3>Studio Niva</h3>
+                <p>A calm, editorial portfolio concept that lets the work breathe and turns inspiration into a consultation enquiry.</p>
+                <ul class="tag-list"><li>Art direction</li><li>Portfolio</li><li>Consultation flow</li></ul>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section services-section" id="services">
+        <div class="container">
+          <div class="section-heading split-heading">
+            <div>
+              <p class="eyebrow">What I can help with</p>
+              <h2>Everything your<br>website <em>needs.</em></h2>
+            </div>
+            <p class="heading-aside">No unnecessary complexity. Just the right mix of thinking, design and development for your business and your customers.</p>
+          </div>
+
+          <div class="service-list">
+            <article class="service-item">
+              <span class="service-number">01</span>
+              <div class="service-title"><h3>A new business website</h3><p>For businesses ready to look as professional online as they are in person.</p></div>
+              <ul><li>Structure &amp; content direction</li><li>Custom responsive design</li><li>Enquiry or booking setup</li><li>Basic search optimisation</li><li>GitHub Pages launch</li></ul>
+            </article>
+            <article class="service-item">
+              <span class="service-number">02</span>
+              <div class="service-title"><h3>A website redesign</h3>For an existing website that feels outdated, confusing or difficult to use.</div>
+              <ul><li>Content and UX cleanup</li><li>Modern visual direction</li><li>Mobile improvements</li><li>Speed-focused build</li><li>Launch and handover</li></ul>
+            </article>
+            <article class="service-item">
+              <span class="service-number">03</span>
+              <div class="service-title"><h3>Enquiries, bookings &amp; tools</h3>For businesses that need their website to do more than simply exist.</div>
+              <ul><li>Lead enquiry forms</li><li>Trial and booking flows</li><li>Business dashboards</li><li>Useful web tools</li><li>Third-party integrations</li></ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section process-section" id="process">
+        <div class="container process-grid">
+          <div class="process-intro">
+            <p class="eyebrow">A straightforward process</p>
+            <h2>Clear at<br><em>every step.</em></h2>
+            <p>You will always know what is being made, what comes next and what is needed from you.</p>
+            <a class="text-link" href="#contact">Tell me what you need <span aria-hidden="true">↗</span></a>
+          </div>
+          <ol class="process-list">
+            <li><span>01</span><div><h3>Discover</h3><p>We define your customer, your goal and the action your website should encourage. Then I turn that into a clear project scope.</p></div></li>
+            <li><span>02</span><div><h3>Design</h3><p>I shape the content and visual direction around your business—not a one-size-fits-all template.</p></div></li>
+            <li><span>03</span><div><h3>Build</h3><p>Your website is developed to be responsive, accessible and straightforward to use across modern devices and browsers.</p></div></li>
+            <li><span>04</span><div><h3>Launch</h3><p>After content and functionality checks, we put the website live and make sure you understand what has been delivered.</p></div></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section about-section" id="about">
+        <div class="container about-grid">
+          <div class="about-monogram" aria-hidden="true"><span>A</span><small>INDEPENDENT<br>WEB DESIGNER &amp;<br>DEVELOPER</small></div>
+          <div class="about-copy">
+            <p class="eyebrow">A little about me</p>
+            <h2>Thoughtful design.<br><em>Honest execution.</em></h2>
+            <p class="about-lead">I’m Ankit. I design and build websites for businesses that want to be easier to find, easier to trust and easier to contact.</p>
+            <p>My approach is simple: understand what matters, remove what does not, and make every part of the experience feel clear. No inflated claims, no mysterious process—just focused work and direct communication.</p>
+            <div class="about-values">
+              <div><strong>Clear before clever</strong><span>Your customer should never have to guess what to do next.</span></div>
+              <div><strong>Built around you</strong><span>Your business, content and goals shape the final result.</span></div>
+              <div><strong>Details matter</strong><span>From small screens to the final launch check, the details count.</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section faq-section" aria-labelledby="faq-title">
+        <div class="container faq-grid">
+          <div><p class="eyebrow">Before we begin</p><h2 id="faq-title">A few useful<br><em>answers.</em></h2></div>
+          <div class="faq-list">
+            <details><summary>What will my website cost?<span aria-hidden="true">+</span></summary><p>Every project is scoped around the content, features and support you actually need. After a short discussion, you will receive a clear quote before any work begins.</p></details>
+            <details><summary>Can you improve my existing website?<span aria-hidden="true">+</span></summary><p>Yes. I can review the current content and experience, then recommend whether a focused cleanup or a full redesign makes more sense.</p></details>
+            <details><summary>Will my website work on mobile?<span aria-hidden="true">+</span></summary><p>Yes. Every layout is designed responsively and checked across common screen sizes so customers can navigate and enquire from their phone.</p></details>
+            <details><summary>What do you need from me to start?<span aria-hidden="true">+</span></summary><p>Your business details, services, preferred contact method and any photos or brand material you already have. If something is missing, we will identify it in the project scope.</p></details>
+          </div>
+        </div>
+      </section>
+
+      <section class="contact-section" id="contact">
+        <div class="container contact-grid">
+          <div class="contact-copy">
+            <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> New project enquiries are welcome</p>
+            <h2>Let’s make your business <em>easier to choose.</em></h2>
+            <p>Tell me what you do and what you want your website to achieve. I’ll take it from there.</p>
+            <div class="direct-email">
+              <small>Prefer a direct email?</small>
+              <a href="mailto:ytdjbhai34@gmail.com">ytdjbhai34@gmail.com <span aria-hidden="true">↗</span></a>
+              <button class="copy-button" type="button" data-copy-email="ytdjbhai34@gmail.com">Copy email</button>
+            </div>
+          </div>
+
+          <form class="project-form" id="project-form" data-recipient="ytdjbhai34@gmail.com">
+            <div class="form-row">
+              <label>Your name<input name="name" type="text" autocomplete="name" placeholder="Your name" required></label>
+              <label>Business name<input name="business" type="text" autocomplete="organization" placeholder="Business or brand"></label>
+            </div>
+            <label>What do you need?
+              <select name="service" required>
+                <option value="" selected disabled>Select a service</option>
+                <option>New business website</option>
+                <option>Website redesign</option>
+                <option>Booking or enquiry system</option>
+                <option>Something else</option>
+              </select>
+            </label>
+            <label>Tell me a little about the project<textarea name="message" rows="4" placeholder="What does your business do, and what would you like to improve?" required></textarea></label>
+            <button class="button button-accent" type="submit">Create enquiry email <span aria-hidden="true">↗</span></button>
+            <p class="form-note">This opens your email app with the details filled in. Nothing is stored on this website.</p>
+            <p class="form-status" role="status" aria-live="polite" data-form-status></p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <a class="brand footer-brand" href="#top"><span class="brand-mark" aria-hidden="true">A<span>.</span></span><span class="brand-copy"><strong>Ankit</strong><small>Clear design. Purposeful code.</small></span></a>
+        <p>© <span data-year>2026</span> Ankit. All rights reserved.</p>
+        <a class="back-to-top" href="#top">Back to top <span aria-hidden="true">↑</span></a>
+      </div>
+    </footer>
+  </body>
 </html>

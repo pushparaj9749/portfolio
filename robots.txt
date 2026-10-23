@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pushparaj9749.github.io/portfolio/sitemap.xml
