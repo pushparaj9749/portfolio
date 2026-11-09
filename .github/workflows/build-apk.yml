@@ -41,6 +41,13 @@ jobs:
             grep -E "^e: |error:|FAILURE|Execution failed|Caused by|> Task .* FAILED" build.log | head -n 120 || true
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload build log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
+          if-no-files-found: ignore
       - name: Publish test report
         if: always()
         uses: actions/upload-artifact@v4
