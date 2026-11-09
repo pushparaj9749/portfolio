@@ -15,6 +15,8 @@ Kriya keeps the power and fixes the three pain points:
 | Template stores ship macros that need unpurchased features | **Only real capabilities** are listed, and the unit tests fail the build if a template references a missing feature |
 | Debugging means enabling a global debug mode and reading logs | **Test now** runs a macro and reports the outcome of each step in plain English |
 
+Research notes and sourcing for these decisions live in [`docs/RESEARCH.md`](docs/RESEARCH.md).
+
 ## What it does
 
 **12 triggers** — time of day (weekday-aware), battery level (drop / rise / any change), charger,
