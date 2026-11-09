@@ -44,6 +44,10 @@ jobs:
           cat build-summary.txt >> "$GITHUB_STEP_SUMMARY"
           DETAIL=$(grep -E '^e: |error:|FAILED|AssertionError|expected:|Expected' build.log | head -n 8 | cut -c1-260 | tr '\n' ' ')
           echo "::error title=Build failed::${DETAIL:-see build-summary.txt}"
+          TESTDETAIL=$(grep -h -A2 '<failure' app/build/test-results/testDebugUnitTest/*.xml 2>/dev/null | head -n 40 | tr '\n' ' ' | cut -c1-600)
+          if [ -n "$TESTDETAIL" ]; then echo "::error title=Test failure detail::${TESTDETAIL}"; fi
+          grep -h -A2 '<failure' app/build/test-results/testDebugUnitTest/*.xml 2>/dev/null | head -n 40 > test-failure.txt
+          cat test-failure.txt >> "$GITHUB_STEP_SUMMARY"
       - name: Upload build log
         if: failure()
         uses: actions/upload-artifact@v4
@@ -126,6 +130,10 @@ jobs:
           cat build-summary.txt >> "$GITHUB_STEP_SUMMARY"
           DETAIL=$(grep -E '^e: |error:|FAILED|AssertionError|expected:|Expected' build.log | head -n 8 | cut -c1-260 | tr '\n' ' ')
           echo "::error title=Build failed::${DETAIL:-see build-summary.txt}"
+          TESTDETAIL=$(grep -h -A2 '<failure' app/build/test-results/testDebugUnitTest/*.xml 2>/dev/null | head -n 40 | tr '\n' ' ' | cut -c1-600)
+          if [ -n "$TESTDETAIL" ]; then echo "::error title=Test failure detail::${TESTDETAIL}"; fi
+          grep -h -A2 '<failure' app/build/test-results/testDebugUnitTest/*.xml 2>/dev/null | head -n 40 > test-failure.txt
+          cat test-failure.txt >> "$GITHUB_STEP_SUMMARY"
 
       - name: Rename artifact
         id: apk

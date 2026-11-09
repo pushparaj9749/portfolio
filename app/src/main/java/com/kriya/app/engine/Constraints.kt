@@ -31,7 +31,7 @@ object Constraints {
 
     fun passes(c: ConstraintSpec, state: DeviceSnapshot): Boolean = when (c.type) {
         ConstraintType.CHARGING -> state.charging == c.b("charging", true)
-        ConstraintType.SCREEN_LOCKED -> state.screenOn == c.b("unlocked", false).not()
+        ConstraintType.SCREEN_LOCKED -> state.screenOn == c.b("unlocked", false)
         ConstraintType.BATTERY_AT_LEAST -> state.batteryPercent >= c.i("percent", 20)
         ConstraintType.WIFI_NAMED -> {
             val wanted = c.s("ssid").trim()
