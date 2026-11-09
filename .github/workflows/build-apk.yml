@@ -42,7 +42,8 @@ jobs:
             echo '```'
           } > build-summary.txt
           cat build-summary.txt >> "$GITHUB_STEP_SUMMARY"
-          echo "::error title=Build failed::$(grep -m5 -E '^e: |error:' build.log | head -n 5 | cut -c1-300 | tr '\n' ' ')"
+          DETAIL=$(grep -E '^e: |error:|FAILED|AssertionError|expected:|Expected' build.log | head -n 8 | cut -c1-260 | tr '\n' ' ')
+          echo "::error title=Build failed::${DETAIL:-see build-summary.txt}"
       - name: Upload build log
         if: failure()
         uses: actions/upload-artifact@v4
@@ -123,7 +124,8 @@ jobs:
             echo '```'
           } > build-summary.txt
           cat build-summary.txt >> "$GITHUB_STEP_SUMMARY"
-          echo "::error title=Build failed::$(grep -m5 -E '^e: |error:' build.log | head -n 5 | cut -c1-300 | tr '\n' ' ')"
+          DETAIL=$(grep -E '^e: |error:|FAILED|AssertionError|expected:|Expected' build.log | head -n 8 | cut -c1-260 | tr '\n' ' ')
+          echo "::error title=Build failed::${DETAIL:-see build-summary.txt}"
 
       - name: Rename artifact
         id: apk
