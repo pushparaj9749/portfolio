@@ -52,7 +52,7 @@ class ScheduleTest {
     fun nextOccurrenceLaterToday() {
         // Monday 20 Oct 2025, 06:00 → 07:00 today
         val from = LocalDateTime.of(2025, 10, 20, 6, 0)
-        val next = Schedule.nextOccurrence("07:00", Schedule.EVERY_DAY, from)!!
+        val next = Schedule.nextOccurrence("07:00", (1..7).toSet(), from)!!
         assertEquals(from.toLocalDate(), next.toLocalDate())
         assertEquals(7, next.hour)
     }
@@ -60,7 +60,7 @@ class ScheduleTest {
     @Test
     fun nextOccurrenceRollsToTomorrow() {
         val from = LocalDateTime.of(2025, 10, 20, 8, 0)
-        val next = Schedule.nextOccurrence("07:00", Schedule.EVERY_DAY, from)!!
+        val next = Schedule.nextOccurrence("07:00", (1..7).toSet(), from)!!
         assertEquals(from.toLocalDate().plusDays(1), next.toLocalDate())
         assertEquals(7, next.hour)
     }
@@ -76,7 +76,7 @@ class ScheduleTest {
 
     @Test
     fun nextOccurrenceReturnsNullForBadTime() {
-        assertNull(Schedule.nextOccurrence("nope", Schedule.EVERY_DAY, LocalDateTime.now()))
+        assertNull(Schedule.nextOccurrence("nope", (1..7).toSet(), LocalDateTime.now()))
     }
 
     @Test
