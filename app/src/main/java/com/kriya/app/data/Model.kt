@@ -1,6 +1,13 @@
 package com.kriya.app.data
 
 /** All persisted model types. Plain Kotlin — no Android / JSON dependencies. */
+/** Accepts the several spellings automation params use ("1", "0", "true", "on", ...). */
+fun parseFlag(raw: String?, fallback: Boolean = false): Boolean = when (raw?.trim()?.lowercase()) {
+    "1", "true", "yes", "on" -> true
+    "0", "false", "no", "off" -> false
+    else -> fallback
+}
+
 enum class TriggerType {
     TIME, BATTERY, CHARGER, WIFI, BLUETOOTH, SCREEN, APP, HEADPHONES, AIRPLANE, RINGER, BOOT, MANUAL
 }
@@ -21,7 +28,7 @@ data class TriggerSpec(
     fun s(key: String, fallback: String = ""): String = params[key] ?: fallback
     fun i(key: String, fallback: Int = 0): Int = params[key]?.toIntOrNull() ?: fallback
     fun b(key: String, fallback: Boolean = false): Boolean =
-        params[key]?.toBooleanStrictOrNull() ?: fallback
+        parseFlag(params[key], fallback)
 }
 
 data class ConstraintSpec(
@@ -31,7 +38,7 @@ data class ConstraintSpec(
     fun s(key: String, fallback: String = ""): String = params[key] ?: fallback
     fun i(key: String, fallback: Int = 0): Int = params[key]?.toIntOrNull() ?: fallback
     fun b(key: String, fallback: Boolean = false): Boolean =
-        params[key]?.toBooleanStrictOrNull() ?: fallback
+        parseFlag(params[key], fallback)
 }
 
 data class ActionSpec(
@@ -41,7 +48,7 @@ data class ActionSpec(
     fun s(key: String, fallback: String = ""): String = params[key] ?: fallback
     fun i(key: String, fallback: Int = 0): Int = params[key]?.toIntOrNull() ?: fallback
     fun b(key: String, fallback: Boolean = false): Boolean =
-        params[key]?.toBooleanStrictOrNull() ?: fallback
+        parseFlag(params[key], fallback)
 }
 
 data class Macro(
