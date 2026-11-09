@@ -40,13 +40,15 @@ jobs:
             echo '```'
             grep -E "^e: |error:|FAILURE|Execution failed|Caused by|> Task .* FAILED" build.log | head -n 120 || true
             echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
+          } > build-summary.txt
+          cat build-summary.txt >> "$GITHUB_STEP_SUMMARY"
+          echo "::error title=Build failed::$(grep -m5 -E '^e: |error:' build.log | head -n 5 | cut -c1-300 | tr '\n' ' ')"
       - name: Upload build log
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: build-log
-          path: build.log
+          path: build-summary.txt
           if-no-files-found: ignore
       - name: Publish test report
         if: always()
@@ -119,7 +121,9 @@ jobs:
             echo '```'
             grep -E "^e: |error:|FAILURE|Execution failed|Caused by|> Task .* FAILED" build.log | head -n 120 || true
             echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
+          } > build-summary.txt
+          cat build-summary.txt >> "$GITHUB_STEP_SUMMARY"
+          echo "::error title=Build failed::$(grep -m5 -E '^e: |error:' build.log | head -n 5 | cut -c1-300 | tr '\n' ' ')"
 
       - name: Rename artifact
         id: apk
