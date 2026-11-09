@@ -31,7 +31,16 @@ jobs:
           java-version: "17"
       - uses: gradle/actions/setup-gradle@v4
       - name: Run tests
-        run: ./gradlew --no-daemon testDebugUnitTest
+        run: ./gradlew --no-daemon testDebugUnitTest 2>&1 | tee build.log; exit ${PIPESTATUS[0]}
+      - name: Summarise build output
+        if: failure()
+        run: |
+          {
+            echo '### Build output'
+            echo '```'
+            grep -E "^e: |error:|FAILURE|Execution failed|Caused by|> Task .* FAILED" build.log | head -n 120 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
       - name: Publish test report
         if: always()
         uses: actions/upload-artifact@v4
@@ -93,7 +102,17 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: ./gradlew --no-daemon ${{ steps.kind.outputs.task }}
+        run: ./gradlew --no-daemon ${{ steps.kind.outputs.task }} 2>&1 | tee build.log; exit ${PIPESTATUS[0]}
+
+      - name: Summarise build output
+        if: failure()
+        run: |
+          {
+            echo '### APK build output'
+            echo '```'
+            grep -E "^e: |error:|FAILURE|Execution failed|Caused by|> Task .* FAILED" build.log | head -n 120 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Rename artifact
         id: apk
