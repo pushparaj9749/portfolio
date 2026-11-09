@@ -18,6 +18,7 @@ data class PermissionItem(
     val emoji: String,
     val granted: Boolean,
     val required: Boolean,
+    val steps: List<String>,
     val open: () -> Unit
 )
 
@@ -39,7 +40,12 @@ object PermissionHub {
                     ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
                         PackageManager.PERMISSION_GRANTED
                 } else nm.areNotificationsEnabled(),
-                required = false
+                required = false,
+                steps = listOf(
+                    "Tap the button below — Kriya's notification page opens directly",
+                    "Turn \"Allow notifications\" ON",
+                    "Come back and tap \"Re-check\""
+                )
             ) {
                 runCatching {
                     context.startActivity(
@@ -55,7 +61,13 @@ object PermissionHub {
                 why = "Phones from Xiaomi, Oppo, Vivo, Samsung and OnePlus silently freeze automation apps. This is the single biggest reason macros stop working.",
                 emoji = "🔋",
                 granted = pm.isIgnoringBatteryOptimizations(context.packageName),
-                required = true
+                required = true,
+                steps = listOf(
+                    "Tap the button below — a dialog should appear with Kriya already selected",
+                    "Choose \"Don't optimise\" or \"Unrestricted\"",
+                    "If nothing happens: go to Settings → Apps → Kriya → Battery → Unrestricted",
+                    "Can't find Kriya? Use \"Open App info\" above — battery is one tap from there"
+                )
             ) {
                 runCatching {
                     context.startActivity(
@@ -70,7 +82,12 @@ object PermissionHub {
                 why = "Needed to switch silent / vibrate / DND from an automation.",
                 emoji = "🌙",
                 granted = nm.isNotificationPolicyAccessGranted,
-                required = false
+                required = false,
+                steps = listOf(
+                    "Tap the button below to open DND access settings",
+                    "Find \"Kriya\" in the list and toggle it ON",
+                    "Don't see it? Scroll down or type \"Kriya\" in the Settings search bar"
+                )
             ) {
                 runCatching {
                     context.startActivity(
@@ -85,7 +102,12 @@ object PermissionHub {
                 why = "Lets time triggers fire at the exact minute instead of a few minutes late.",
                 emoji = "⏰",
                 granted = Scheduling.canScheduleExact(context),
-                required = false
+                required = false,
+                steps = listOf(
+                    "Tap the button below",
+                    "If a toggle appears for Kriya, switch it ON",
+                    "On Android 14+ this is usually granted automatically"
+                )
             ) {
                 runCatching {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -102,7 +124,12 @@ object PermissionHub {
                 why = "Only used to know which app you just opened, for \"when I open…\" triggers.",
                 emoji = "🚀",
                 granted = UsageWatcher(context).hasAccess(),
-                required = false
+                required = false,
+                steps = listOf(
+                    "Tap the button below — opens the usage access screen",
+                    "Find \"Kriya\" in the app list (use the search bar at the top)",
+                    "Toggle \"Permit usage access\" ON"
+                )
             ) {
                 runCatching {
                     context.startActivity(
@@ -117,7 +144,12 @@ object PermissionHub {
                 why = "Needed for the brightness action.",
                 emoji = "☀️",
                 granted = Settings.System.canWrite(context),
-                required = false
+                required = false,
+                steps = listOf(
+                    "Tap the button below — Kriya should already be selected",
+                    "Toggle \"Allow modifying system settings\" ON",
+                    "If nothing happens: Settings → Apps → Kriya → Allow modifying system settings"
+                )
             ) {
                 runCatching {
                     context.startActivity(
@@ -134,4 +166,14 @@ object PermissionHub {
 
     fun missingRequired(context: Context): List<PermissionItem> =
         items(context).filter { it.required && !it.granted }
+
+    fun openAppInfo(context: Context) {
+        runCatching {
+            context.startActivity(
+                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.parse("package:${context.packageName}"))
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            )
+        }
+    }
 }

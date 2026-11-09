@@ -16,6 +16,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.ChevronRight
+import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -88,11 +90,68 @@ fun SetupScreen(vm: KriyaViewModel, modifier: Modifier = Modifier) {
 
         item { SectionHeader("Permissions") }
 
+        item {
+            Column(Modifier.padding(horizontal = 20.dp, vertical = 4.dp)) {
+                val missingRequired = state.permissions.count { it.required && !it.granted }
+                if (missingRequired > 0) {
+                    SurfaceCard(
+                        onClick = {
+                            val first = state.permissions.firstOrNull { it.required && !it.granted }
+                            first?.open()
+                        }
+                    ) {
+                        Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                Modifier
+                                    .size(36.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(MaterialTheme.colorScheme.errorContainer),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(Icons.Rounded.Warning, contentDescription = null, tint = MaterialTheme.colorScheme.onErrorContainer, modifier = Modifier.size(20.dp))
+                            }
+                            Spacer(Modifier.width(12.dp))
+                            Column(Modifier.weight(1f)) {
+                                Text(
+                                    "$missingRequired required ${if (missingRequired == 1) "permission" else "permissions"} missing",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                                Text(
+                                    "Tap to fix the first one — we'll walk you through it",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            Icon(Icons.Rounded.ChevronRight, contentDescription = "Fix", tint = MaterialTheme.colorScheme.error)
+                        }
+                    }
+                    Spacer(Modifier.height(8.dp))
+                }
+                SurfaceCard(onClick = { vm.openAppInfo() }) {
+                    Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Rounded.Info, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
+                        Spacer(Modifier.width(12.dp))
+                        Column(Modifier.weight(1f)) {
+                            Text("Open Kriya's App info", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Medium)
+                            Text(
+                                "Can't find Kriya in Settings? This opens the app's page directly — battery, notifications and more are all here.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Icon(Icons.Rounded.ChevronRight, contentDescription = "Open", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
+            }
+        }
+
         items(state.permissions.size) { index ->
             val item: PermissionItem = state.permissions[index]
             Column(Modifier.padding(horizontal = 20.dp, vertical = 4.dp)) {
                 SurfaceCard(onClick = { if (!item.granted) item.open() }) {
-                    Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Row(Modifier.padding(16.dp), verticalAlignment = Alignment.Top) {
                         Text(item.emoji, style = MaterialTheme.typography.titleLarge)
                         Spacer(Modifier.width(12.dp))
                         Column(Modifier.weight(1f)) {
@@ -116,6 +175,33 @@ fun SetupScreen(vm: KriyaViewModel, modifier: Modifier = Modifier) {
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
+                            if (!item.granted && item.steps.isNotEmpty()) {
+                                Spacer(Modifier.height(10.dp))
+                                Column(Modifier.padding(start = 4.dp)) {
+                                    item.steps.forEachIndexed { i, step ->
+                                        Row(Modifier.padding(vertical = 2.dp)) {
+                                            Text(
+                                                "${i + 1}.",
+                                                style = MaterialTheme.typography.labelMedium,
+                                                fontWeight = FontWeight.Bold,
+                                                color = if (item.required) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                                                modifier = Modifier.width(20.dp)
+                                            )
+                                            Text(
+                                                step,
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.onSurface
+                                            )
+                                        }
+                                    }
+                                }
+                                Spacer(Modifier.height(8.dp))
+                                Text(
+                                    "Tip: use the search bar in Settings and type \"Kriya\" if you can't find it",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.tertiary
+                                )
+                            }
                         }
                         if (item.granted) {
                             Box(

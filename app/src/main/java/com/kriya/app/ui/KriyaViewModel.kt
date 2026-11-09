@@ -265,6 +265,10 @@ class KriyaViewModel(app: Application) : AndroidViewModel(app) {
         return if (missing.isEmpty()) "All permissions granted" else "${missing.size} still need attention"
     }
 
+    fun openAppInfo() {
+        PermissionHub.openAppInfo(getApplication())
+    }
+
     fun clearLog() {
         prefs.clearLog()
         refresh()
