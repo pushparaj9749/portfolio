@@ -123,7 +123,7 @@ class KriyaViewModel(app: Application) : AndroidViewModel(app) {
 
     /* ---------------- navigation ---------------- */
 
-    fun setTab(t: Tab) {
+    fun selectTab(t: Tab) {
         tab = t
         refresh()
     }

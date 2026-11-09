@@ -142,7 +142,7 @@ fun SetupScreen(vm: KriyaViewModel, modifier: Modifier = Modifier) {
                 OutlinedButton(
                     onClick = {
                         val msg = vm.recheckPermissions()
-                        vm.setTab(com.kriya.app.ui.Tab.SETTINGS)
+                        vm.selectTab(com.kriya.app.ui.Tab.SETTINGS)
                         vm.refresh()
                         Toast(msg)
                     },

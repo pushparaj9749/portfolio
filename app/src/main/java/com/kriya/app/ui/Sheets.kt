@@ -198,7 +198,7 @@ private fun HealthCheck(vm: KriyaViewModel) {
     val findings = vm.state.findings
     findings.forEach { finding ->
         FindingCard(finding) {
-            vm.setTab(Tab.SETTINGS)
+            vm.selectTab(Tab.SETTINGS)
         }
     }
     Spacer(Modifier.height(10.dp))

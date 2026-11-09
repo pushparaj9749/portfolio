@@ -85,7 +85,7 @@ fun KriyaRoot(prefs: Prefs, vm: KriyaViewModel = viewModel()) {
                         Tab.entries.forEach { tab ->
                             NavigationBarItem(
                                 selected = vm.tab == tab,
-                                onClick = { vm.setTab(tab) },
+                                onClick = { vm.selectTab(tab) },
                                 icon = {
                                     Icon(
                                         when (tab) {
