@@ -87,12 +87,12 @@ private fun SheetTitle(title: String, subtitle: String) {
 
 @Composable
 private fun TemplateGallery(vm: KriyaViewModel, close: () -> Unit) {
-    var detail by remember { mutableStateOf<String?>(null) }
+    val detail = remember { mutableStateOf<String?>(null) }
     SheetTitle("Template gallery", "Ready to use in one tap. Everything here is fully supported.")
     Templates.all.forEach { template ->
         SurfaceCard(
             modifier = Modifier.padding(bottom = 8.dp),
-            onClick = { detail = template.key }
+            onClick = { detail.value = template.key }
         ) {
             Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
                 Box(
@@ -114,8 +114,9 @@ private fun TemplateGallery(vm: KriyaViewModel, close: () -> Unit) {
             }
         }
     }
-    if (detail != null) {
-        val template = Templates.byKey(detail!!)
+    val picked = detail.value
+    if (picked != null) {
+        val template = Templates.byKey(picked)
         if (template != null) {
             Spacer(Modifier.height(12.dp))
             SurfaceCard {

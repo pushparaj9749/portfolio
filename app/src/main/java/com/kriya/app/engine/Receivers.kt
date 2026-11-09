@@ -65,7 +65,7 @@ class KriyaReceiver : BroadcastReceiver() {
                 engine.fire(TriggerEvent(TriggerType.HEADPHONES, info = mapOf("plugged" to if (plugged) "1" else "0")))
             }
 
-            Intent.ACTION_AIRPLANE_MODE -> {
+            Intent.ACTION_AIRPLANE_MODE_CHANGED -> {
                 val on = intent.getBooleanExtra("state", false)
                 engine.fire(TriggerEvent(TriggerType.AIRPLANE, info = mapOf("enabled" to if (on) "1" else "0")))
             }
